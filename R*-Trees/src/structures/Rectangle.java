@@ -6,9 +6,7 @@ public class Rectangle {
 	private float minY;
 	private float maxY;
 	
-	public Rectangle(){
-		
-	}
+	public Rectangle(){}
 	
 	public Rectangle(float x1, float x2, float y1, float y2){
 		minX = x1;
@@ -17,6 +15,22 @@ public class Rectangle {
 		minY = y1;
 		maxY = y2;
 	}
+	
+	public float left(){
+		return minX;
+	}
+	
+	public float right(){
+		return maxX;
+	}
+	
+	public float top(){
+		return maxY;
+	}
+	
+	public float bottom(){
+		return minY;
+	} 
 	
 	/*Devuelve ancho del rectangulo*/
 	public float width(){
@@ -44,7 +58,10 @@ public class Rectangle {
 	
 	/*Determina si los dos rectangulos se intersectan*/
 	public boolean intersects(Rectangle r){
-		return false;
+		return !(r.left() > this.right() 
+			     ||  r.right() < this.left()
+				 ||  r.top() > this.bottom()
+				 ||  r.bottom() < this.top());
 	}
 	
 	/*Determina si el rectangulo entregado esta contenido en este rectangulo*/
@@ -87,8 +104,8 @@ public class Rectangle {
 		return false;
 	}
 	
-	/*Calcula el overlap entre el rectangulo y el rectangulo entregado*/
-	public float overlap(Rectangle r){
+	/*Calcula el overlap que aumentaria el rectangulo y al incluir el rectangulo entregado*/
+	public float overlapEnlargement(Rectangle r){
 		return 0;
 	}
 	
