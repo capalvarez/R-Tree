@@ -1,5 +1,7 @@
 package structures;
 
+import java.util.LinkedList;
+
 public class Rectangle {
 	private float minX;
 	private float maxX;
@@ -86,32 +88,61 @@ public class Rectangle {
 	
 	/*Devuelve el area que aumentaria el rectangulo si se agrega al rectangulo entregado*/
 	public float areaEnlargement(Rectangle r){
-		return 0;
-	}
-	
-	/*Guarda en este rectangulo el resultado de agregar el rectangulo entregado al original*/
-	public void addRectangle(Rectangle r){
+		/*Obtener el valor del area antes de incluir el nuevo rectangulo*/
+		float oldArea = this.getArea();
 		
-	}
+		/*Incluir el nuevo rectangulo*/
+		Rectangle newR = this.union(r);
+		float newArea = newR.getArea();	
 		
-	/*Computa el resultado de unir este rectangulo con el entregado, sin modificar ninguno*/
-	public Rectangle rectangleUnion(Rectangle r){
-		return null;
+		return Math.abs(newArea - oldArea);
 	}
-	
+			
 	/*Determina si los dos rectangulos son equivalentes (tienen los mismos bordes)*/
 	public boolean equals(Rectangle r){
-		return false;
+		return (this.left()==r.left()) && (this.right()==r.right()) &&
+			   (this.top()==r.top()) && (this.bottom()==r.bottom());
 	}
 	
+	/*Calcula el overlap del rectangulo*/
+	public float overlap(LinkedList<NodeElem> childList){
+		float sum = 0;
+	    
+		for(int i=0; i<childList.size(); i++){
+			Rectangle cR = childList.get(i).getRectangle();
+			
+	        sum += cR.intersection(this).getArea();
+	    }
+		
+	    return sum;	
+	}
+	
+	
 	/*Calcula el overlap que aumentaria el rectangulo y al incluir el rectangulo entregado*/
-	public float overlapEnlargement(Rectangle r){
-		return 0;
+	public float overlapEnlargement(Rectangle r, LinkedList<NodeElem> childList){
+		/*Calcular el valor del overlap sin incluir el nuevo rectangulo*/
+		float oldOverlap = this.overlap(childList);
+		
+		/*Incluir el nuevo rectangulo para calcular el overlap*/		
+		Rectangle newR = this.union(r);
+		float newOverlap = newR.overlap(childList);	
+		
+		return Math.abs(newOverlap - oldOverlap);
 	}
 	
 	/*Devuelve el margen (perimetro) del rectangulo*/
 	public float getMargin(){
 		return 0;
+	}
+	
+	/*Devuelve la inteseccion entre el rectangulo y el entregado*/
+	public Rectangle intersection(Rectangle r){
+		return null;
+	}
+	
+	/*Devuelve un nuevo rectangulo, que corresponde a la union de este y el entregado*/
+	public Rectangle union(Rectangle r){
+		return null;
 	}
 	
 }

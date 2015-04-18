@@ -13,10 +13,9 @@ public interface Node {
 	/*Devuelve la lista enlazada que guarda el nodo*/
 	public LinkedList getList();
 	
-	/*Devuelve el MBR (rectangulo que contiene a los elementos del nodo)*/
-	public Rectangle getRectangle();
-
-	/*Cambia el rectangulo covertor para ajustarse a los datos*/
-	public void adjustRectangle();
+	/*Decide si el nodo es la raiz o no*/
+	public boolean isRoot();
 	
+	/*Busca la entrada correspondiente a un nodo en la lista de NodeElem*/
+	public NodeElem findEntry(Node n);
 }
