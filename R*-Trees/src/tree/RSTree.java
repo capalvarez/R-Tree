@@ -2,11 +2,13 @@ package tree;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 import structures.*;
 
 public class RSTree {
 	private int t;
+	private int m;
 	private Node root;
 	
 	/*Inicializa un nuevo R*-Tree*/	
@@ -15,11 +17,103 @@ public class RSTree {
 		root = new LeafNode();
 	}
 	
-	/*Insertar un rectangulo*/
-	public void insertRectangle(Rectangle r){
+	/*Insertar un rectangulo usando el algoritmo de split en caso de overflow*/
+	public void insertSplitRectangle(Rectangle r){
+		/*Busco el nodo hoja en el que debo insertar el nuevo rectangulo*/
+		//NodeFamily c = chooseSubtree(root,r);
+		//c.getNode().getList().add(r);
+		
+		
+		
 		
 	}
+	
+	
+	
+	
+	/*Insertar un rectangulo usando el algoritmo de reinsert en caso de overflow*/
+	/*public void insertReinsertRectangle(Rectangle r){*/
+		/*Busco el nodo hoja en el que debo insertar el nuevo rectangulo*/
+		/*NodeFamily c = chooseSubtree(root,r);
+		c.getNode().getList().add(r);
 		
+		
+		
+		
+	}*/
+	
+	/*Realiza split de un nodo, devolviendo los dos nodos en los que se divide*/
+	public Node[] split(Node n){
+		int dim = chooseSplitAxis(n);
+		int k = chooseSplitIndex(n,dim);
+		
+		
+		
+		
+	}
+	
+	public int chooseSplitAxis(Node n){
+		/*Consideramos solamente dos dimensiones*/
+		float[] sum = new float[2];
+		
+		for(int d = 0; d<2; d++){
+			LinkedList list = n.getList();
+			list = sortByDimMin(list,d);
+		
+			for(int k=1; k<(2*t-2*m+2); k++){
+				List l1 = list.subList(0,k-1);
+				List l2 = list.subList(k,list.size());
+			
+				Rectangle MBR1 = getBoundingRectangle(l1);
+				Rectangle MBR2 = getBoundingRectangle(l2);
+				
+				sum[d] = sum[d] + MBR1.getMargin() + MBR2.getMargin();	
+			}
+			
+			list = sortByDimMax(list,d);
+			
+			for(int k=1; k<(2*t-2*m+2); k++){
+				List l1 = list.subList(0,k-1);
+				List l2 = list.subList(k,list.size());
+			
+				Rectangle MBR1 = getBoundingRectangle(l1);
+				Rectangle MBR2 = getBoundingRectangle(l2);
+				
+				sum[d] = sum[d] + MBR1.getMargin() + MBR2.getMargin();	
+			}
+		}
+		
+		float sumMin = Float.MAX_VALUE;
+		int dim = 0;
+		
+		for(int d = 0; d<2; d++){
+			if(sum[d]<sumMin){
+				sumMin = sum[d];
+				dim = d;
+			}
+		}		
+		return dim;
+	}
+	
+	public int chooseSplitIndex(Node n, int dim){
+		return 0;
+	}
+		
+	/*Ordena la lista segun los valores de la dimension dim de menor a mayor*/ 
+	public LinkedList sortByDimMin(LinkedList l, int dim){
+		return null;
+	}
+	
+	/*Ordena la lista segun los valores de la dimension dim de mayor a menor*/ 
+	public LinkedList sortByDimMax(LinkedList l, int dim){
+		return null;
+	}
+	
+	/*Entrega el rectangulo que cubre a todos los elementos de la lista*/
+	public Rectangle getBoundingRectangle(List list){
+		return null;	
+	}
+	
 	/*Eliminar un rectangulo*/
 	public void deleteRectangle(Rectangle r){
 		NodeFamily newFamily = new NodeFamily();
@@ -39,6 +133,7 @@ public class RSTree {
 		/*Si luego de condensar el arbol, la raiz me queda con un solo elemento*/
 		if(root.getEntryCount()==1)
 			root = (Node)root.getList().get(0);
+			root.setAsRoot();
 
 	}
 	
@@ -85,7 +180,10 @@ public class RSTree {
 	/*Propaga los cambios por haber eliminado un nodo de abajo hacia arriba*/
 	public void condenseTree(NodeFamily init){
 		LinkedList<Node> deleteList = new LinkedList<Node>();
+		LinkedList<Integer> heightList = new LinkedList<Integer>();
 		Node n = init.getNode();
+		
+		int height = 0;
 		
 		while(!n.isRoot()){
 			Node parent = init.getParent();
@@ -94,17 +192,24 @@ public class RSTree {
 			if(n.getEntryCount()<t){
 				parent.getList().remove(entryN);
 				deleteList.add(n);
+				heightList.add(height);
 			}else{
-				entryN.getRectangle().adjustRectangle();
+				entryN.adjustRectangle();
 			}
 			
+			height++;
 			n = parent;		
 		}
 		
 		/*Etapa de reinsercion*/
 		for(int i = 0; i<deleteList.size(); i++){
-			
+			insertByHeight(deleteList.get(i),heightList.get(i));
 		}	
+	}
+	
+	/*Insertar un nodo a una cierta altura de forma obligatoria*/
+	public void insertByHeight(Node n, int height){
+		
 	}
 	
 	/*Busco todos los rectangulos que intersectan el entregado*/
@@ -142,8 +247,7 @@ public class RSTree {
 		
 		return returnList;	
 	}
-	
-		
+			
 	public Rectangle[] getRectangleArray(ArrayList<Rectangle> rList){	
 		Rectangle[] rArray = new Rectangle[rList.size()];
 		rArray = rList.toArray(rArray);

@@ -3,6 +3,7 @@ package structures;
 import java.util.LinkedList;
 
 public class LeafNode implements Node {
+	private boolean isRoot;
 	private LinkedList<Rectangle> infoList;
 			
 	public int getEntryCount(){
@@ -25,6 +26,22 @@ public class LeafNode implements Node {
 	
 	public LinkedList getList() {
 		return infoList;
+	}
+
+	public boolean isRoot() {
+		return isRoot;
+	}
+
+	public NodeElem findEntry(Node n) {
+		return null;
+	}
+
+	public void setAsRoot() {
+		isRoot = true;	
+	}
+
+	public void setAsNotRoot() {
+		isRoot = false;
 	}
 	
 }

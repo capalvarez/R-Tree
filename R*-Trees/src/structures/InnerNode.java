@@ -48,5 +48,13 @@ public class InnerNode implements Node {
 		return isRoot;
 	}
 	
+	public void setAsRoot(){
+		isRoot = true;
+	}
+	
+	public void setAsNotRoot(){
+		isRoot = false;
+	}
+	
 	
 }

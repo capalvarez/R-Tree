@@ -18,4 +18,10 @@ public interface Node {
 	
 	/*Busca la entrada correspondiente a un nodo en la lista de NodeElem*/
 	public NodeElem findEntry(Node n);
+	
+	/*Setea el nodo como raiz del arbol*/
+	public void setAsRoot();
+	
+	/*Setea el nodo como uno no raiz*/
+	public void setAsNotRoot();
 }

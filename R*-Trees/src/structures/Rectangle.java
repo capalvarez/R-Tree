@@ -68,12 +68,8 @@ public class Rectangle {
 	
 	/*Determina si el rectangulo entregado esta contenido en este rectangulo*/
 	public boolean contains(Rectangle r){
-		return false;
-	}
-	
-	/*Determina si este rectangulo esta contenido en el entregado*/
-	public boolean containedBy(Rectangle r){
-		return false;
+		return (r.left()>=this.left()) && (this.bottom()>=r.bottom()) &&
+               (r.right()<=this.right()) && (r.top()<=this.top());
 	}
 	
 	/*Entrega la distancia entre el rectangulo y el punto entregado*/
@@ -116,8 +112,7 @@ public class Rectangle {
 		
 	    return sum;	
 	}
-	
-	
+		
 	/*Calcula el overlap que aumentaria el rectangulo y al incluir el rectangulo entregado*/
 	public float overlapEnlargement(Rectangle r, LinkedList<NodeElem> childList){
 		/*Calcular el valor del overlap sin incluir el nuevo rectangulo*/
@@ -132,17 +127,35 @@ public class Rectangle {
 	
 	/*Devuelve el margen (perimetro) del rectangulo*/
 	public float getMargin(){
-		return 0;
+		return 2*(this.height() + this.width());
 	}
 	
-	/*Devuelve la inteseccion entre el rectangulo y el entregado*/
+	/*Devuelve el rectangulo que corresponde a la inteseccion entre el rectangulo y el entregado*/
 	public Rectangle intersection(Rectangle r){
-		return null;
+		float xL = Math.max(this.left(), r.left());
+		float xR = Math.min(this.right(),r.right());
+		
+		if(xL>=xR)
+			return null;
+		
+		float yT = Math.min(this.top(),r.top());
+		float yB = Math.max(this.bottom(), r.bottom());
+		
+		if(yB>=yT)
+			return null;
+		
+		return new Rectangle(xL,xR,yT,yB);	
 	}
 	
 	/*Devuelve un nuevo rectangulo, que corresponde a la union de este y el entregado*/
 	public Rectangle union(Rectangle r){
-		return null;
+		float xL = Math.min(this.left(), r.left());
+		float xR = Math.max(this.right(), r.right());
+		
+		float yT = Math.max(this.top(), r.top());
+		float yB = Math.min(this.bottom(), r.bottom());
+		
+		return new Rectangle(xL,xR,yB,yT);
 	}
-	
+
 }
