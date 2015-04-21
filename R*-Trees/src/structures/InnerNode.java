@@ -10,6 +10,10 @@ public class InnerNode implements Node {
 		childList = new LinkedList<NodeElem>();
 	}
 	
+	public InnerNode(LinkedList list){
+		childList = list;
+	}
+	
 	public int getEntryCount(){
 		return childList.size();
 	}

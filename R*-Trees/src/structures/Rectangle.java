@@ -18,6 +18,22 @@ public class Rectangle {
 		maxY = y2;
 	}
 	
+	public float getMinDim(int dim){
+		if(dim==0){
+			return minX;
+		}else{
+			return minY;
+		}
+	}
+	
+	public float getMaxDim(int dim){
+		if(dim==0){
+			return maxX;
+		}else{
+			return maxY;
+		}
+	}
+	
 	public float left(){
 		return minX;
 	}
@@ -74,12 +90,16 @@ public class Rectangle {
 	
 	/*Entrega la distancia entre el rectangulo y el punto entregado*/
 	public float distance(float x, float y){
-		return 0;
+		float[] midPoint = this.getCenter();	
+		float distance = (float) Math.sqrt(Math.pow(x-midPoint[0], 2) + Math.pow(y-midPoint[1], 2));
+		
+		return distance;
 	}
 	
 	/*Entrega la distancia entre el rectangulo y el rectangulo entregado*/
 	public float distance(Rectangle r){
 		return 0;
+		
 	}
 	
 	/*Devuelve el area que aumentaria el rectangulo si se agrega al rectangulo entregado*/
@@ -157,5 +177,15 @@ public class Rectangle {
 		
 		return new Rectangle(xL,xR,yB,yT);
 	}
+	
+	public float[] getCenter(){
+		float[] midPoint = new float[2];
+		
+		midPoint[0] = (right() - left())/2;
+		midPoint[1] = (top() - bottom())/2;
+		
+		return midPoint;
+	}
+	
 
 }

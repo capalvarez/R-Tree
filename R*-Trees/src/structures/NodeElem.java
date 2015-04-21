@@ -13,6 +13,15 @@ public class NodeElem {
 		child = c;
 	}
 	
+	public float getMinDim(int dim){
+		return boundingRectangle.getMinDim(dim);
+	}
+	
+	public float getMaxDim(int dim){
+		return boundingRectangle.getMaxDim(dim);
+	}
+	
+	
 	public void setChild(Node n){
 		child = n;
 	}

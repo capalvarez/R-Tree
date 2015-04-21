@@ -4,8 +4,14 @@ import java.util.LinkedList;
 
 public class LeafNode implements Node {
 	private boolean isRoot;
-	private LinkedList<Rectangle> infoList;
-			
+	private LinkedList<Rectangle> infoList = new LinkedList<Rectangle>();
+	
+	public LeafNode(){}
+	
+	public LeafNode(LinkedList info){
+		infoList = info;
+	}
+	
 	public int getEntryCount(){
 		return infoList.size();
 	}
