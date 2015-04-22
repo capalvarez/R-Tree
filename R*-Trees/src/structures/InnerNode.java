@@ -10,7 +10,7 @@ public class InnerNode implements Node {
 		childList = new LinkedList<NodeElem>();
 	}
 	
-	public InnerNode(LinkedList list){
+	public InnerNode(LinkedList<NodeElem> list){
 		childList = list;
 	}
 	
@@ -32,7 +32,7 @@ public class InnerNode implements Node {
 		/*No estoy muy segura de que voy a recibir para buscar el que se elimina*/
 	}
 
-	public LinkedList getList() {
+	public LinkedList<NodeElem> getNodeList() {
 		return childList;
 	}
 
@@ -58,6 +58,18 @@ public class InnerNode implements Node {
 	
 	public void setAsNotRoot(){
 		isRoot = false;
+	}
+
+	@Override
+	public int getHeight() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setHeight() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	

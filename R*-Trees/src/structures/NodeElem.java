@@ -44,54 +44,32 @@ public class NodeElem {
 		float left = Float.MAX_VALUE;
 		float right = Float.MIN_VALUE;
 		
-		if(!child.isLeaf()){
-			LinkedList<NodeElem> infoList = child.getList();
+		LinkedList<NodeElem> infoList = child.getNodeList();
 		
-			for(int i = 0; i < infoList.size(); i++){
-				Rectangle r = infoList.get(i).getRectangle();
-				
-				if(r.top()>top){
-					top = r.top();			
-				}
-				
-				if(r.bottom()<bottom){
-					bottom = r.bottom();
-				}
-				
-				if(left>r.left()){
-					left = r.left();	
-				}
-				
-				if(right<r.right()){
-					right = r.right();
-				}	
-			}	
-		}else{
-			/*El nodo hijo es una hoja, por lo tanto guarda una lista de rectangulos*/
-			
-			LinkedList<Rectangle> infoList = child.getList();
-			
-			for(int i = 0; i < infoList.size(); i++){
-				Rectangle r = infoList.get(i);
-				
-				if(r.top()>top){
-					top = r.top();			
-				}
-				
-				if(r.bottom()<bottom){
-					bottom = r.bottom();
-				}
-				
-				if(left>r.left()){
-					left = r.left();	
-				}
-				
-				if(right<r.right()){
-					right = r.right();
-				}	
-			}		
+		for (int i = 0; i < infoList.size(); i++) {
+			Rectangle r = infoList.get(i).getRectangle();
+
+			if (r.top() > top) {
+				top = r.top();
+			}
+
+			if (r.bottom() < bottom) {
+				bottom = r.bottom();
+			}
+
+			if (left > r.left()) {
+				left = r.left();
+			}
+
+			if (right < r.right()) {
+				right = r.right();
+			}
 		}
+		
 		boundingRectangle.setCoordinates(left,right,top,bottom);	
 	}
 	
+	public boolean equals(NodeElem e){
+		return e.getRectangle().equals(this.getRectangle());
+	}	
 }

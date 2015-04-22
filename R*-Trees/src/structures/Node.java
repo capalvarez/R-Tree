@@ -10,8 +10,8 @@ public interface Node {
 	/*Decide si el nodo es hoja o nodo interno*/
 	public boolean isLeaf();
 	
-	/*Devuelve la lista enlazada que guarda el nodo*/
-	public LinkedList getList();
+	/*Devuelve la lista de hijos que guarda el nodo*/
+	public LinkedList<NodeElem> getNodeList();
 	
 	/*Decide si el nodo es la raiz o no*/
 	public boolean isRoot();
@@ -24,4 +24,10 @@ public interface Node {
 	
 	/*Setea el nodo como uno no raiz*/
 	public void setAsNotRoot();
+	
+	/*Retorna la altura en el arbol en el que esta el nodo*/
+	public int getHeight();
+	
+	/*Setea la altura en la que esta el nodo*/
+	public void setHeight();
 }

@@ -4,11 +4,12 @@ import java.util.LinkedList;
 
 public class LeafNode implements Node {
 	private boolean isRoot;
-	private LinkedList<Rectangle> infoList = new LinkedList<Rectangle>();
+	
+	private LinkedList<NodeElem> infoList = new LinkedList<NodeElem>();
 	
 	public LeafNode(){}
 	
-	public LeafNode(LinkedList info){
+	public LeafNode(LinkedList<NodeElem> info){
 		infoList = info;
 	}
 	
@@ -23,14 +24,17 @@ public class LeafNode implements Node {
 	/*Insertar un rectangulo en una hoja*/
 	public void insertInLeaf(Rectangle r,int t){
 		if(this.getEntryCount()<2*t){
-			infoList.add(r);		
+			NodeElem newNE = new NodeElem();
+			newNE.setRectangle(r);
+			
+			infoList.add(newNE);		
 		}else{
 		
 			
 		}
 	}
 	
-	public LinkedList getList() {
+	public LinkedList<NodeElem> getNodeList() {
 		return infoList;
 	}
 
@@ -48,6 +52,18 @@ public class LeafNode implements Node {
 
 	public void setAsNotRoot() {
 		isRoot = false;
+	}
+
+	@Override
+	public int getHeight() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setHeight() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

@@ -23,5 +23,9 @@ public class NodeFamily {
 	public Node getParent(){
 		return family.pop();
 	}
+	
+	public int getTreeHeight(){
+		return family.size();
+	}
 
 }

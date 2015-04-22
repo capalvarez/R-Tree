@@ -96,6 +96,10 @@ public class Rectangle {
 		return distance;
 	}
 	
+	public float distance(float[] c){
+		return distance(c[0],c[1]);
+	}
+	
 	/*Entrega la distancia entre el rectangulo y el rectangulo entregado*/
 	public float distance(Rectangle r){
 		return 0;
