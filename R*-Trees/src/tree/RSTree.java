@@ -17,6 +17,10 @@ public class RSTree {
 	private Node root;
 	private int height;
 	
+	/*Variable que guarda los niveles que he visitado para esta insercion (insercion con reinsert)*/
+	private LinkedList<Integer> levelsVisited = new LinkedList<Integer>();
+	
+	
 	/*Inicializa un nuevo R*-Tree*/	
 	public RSTree(int t){
 		this.t = t;
@@ -415,12 +419,75 @@ public class RSTree {
 		insertData(newR,0);
 	}
 
+	
 	/*Insertar un nodo a una cierta altura de forma obligatoria*/
 	public void insertData(NodeElem e, int level){
 		NodeFamily fam = new NodeFamily();
 		chooseSubtree(fam,e,level);
 		
+		Node n = fam.getNode(); 
+		if(n.getEntryCount()<2*t){
+			n.getNodeList().add(e);
+			
+			/*Ajustar el MBR del nodeElem correspondiente al nodo donde inserte*/
+			NodeElem eN = fam.getParent().findEntry(n);
+			eN.adjustRectangle();
+		}else{
+			OverflowRes ovr = overflowTreatment(n,level);
+			
+			/*Si flag es verdadera, entonces hubo split y es necesario propagarlo hacia
+			 arriba*/
+			if(ovr.split()){
+				propagateSplit(fam,ovr);
+			}
+		}
+		
+		Node p = fam.getParent();
+		while(!n.isRoot()){
+			p.findEntry(n).adjustRectangle();
+			
+			n = p;	
+			p = fam.getParent();	
+		}
+		levelsVisited = new LinkedList<Integer>();
 	}
+	
+	
+	public OverflowRes overflowTreatment(Node n, int level){
+		OverflowRes res = new OverflowRes(n);
+				
+		if(!n.isRoot()){
+			if(!levelsVisited.contains(level)){
+				//reinsert(n,level);
+			}else{
+				
+			}
+		}
+		
+		return null;
+	}
+	
+	public void propagateSplit(NodeFamily fam, OverflowRes over){
+		Node ll = over.getNewNode();
+		Node p = fam.getParent();
+		
+		/*Crear una nueva entrada a insertar en el padre*/
+		NodeElem eLL = new NodeElem();
+		eLL.setChild(ll);
+		eLL.setRectangle(getBoundingRectangle(ll.getNodeList()));
+		
+		p.getNodeList().add(eLL);
+		
+		/*Reviso si hay overflowy propago de ser necesario*/
+		if(p.getEntryCount()>2*t){
+			OverflowRes res = overflowTreatment(p,fam.getTreeHeight());
+			
+			if(res.split()){
+				propagateSplit(fam,res);
+			}	
+		}	
+	}
+	
 	
 	public void reinsert(Node n, Rectangle mbr){
 		LinkedList<NodeElem> list = n.getNodeList();

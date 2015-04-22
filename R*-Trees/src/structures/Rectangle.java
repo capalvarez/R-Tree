@@ -1,6 +1,10 @@
 package structures;
 
+import java.awt.Graphics2D;
+import java.awt.geom.Rectangle2D;
 import java.util.LinkedList;
+
+import display.RectWindow;
 
 public class Rectangle {
 	private float minX;
@@ -76,14 +80,11 @@ public class Rectangle {
 	
 	/*Determina si los dos rectangulos se intersectan*/
 	public boolean intersects(Rectangle r){
-		return !(r.left() > this.right() 
-			     ||  r.right() < this.left()
-				 ||  r.top() > this.bottom()
-				 ||  r.bottom() < this.top());
+		return this.intersection(r)!=null;
 	}
 	
 	/*Determina si el rectangulo entregado esta contenido en este rectangulo*/
-	public boolean contains(Rectangle r){
+	public boolean contains(Rectangle r){		
 		return (r.left()>=this.left()) && (this.bottom()>=r.bottom()) &&
                (r.right()<=this.right()) && (r.top()<=this.top());
 	}
@@ -98,12 +99,6 @@ public class Rectangle {
 	
 	public float distance(float[] c){
 		return distance(c[0],c[1]);
-	}
-	
-	/*Entrega la distancia entre el rectangulo y el rectangulo entregado*/
-	public float distance(Rectangle r){
-		return 0;
-		
 	}
 	
 	/*Devuelve el area que aumentaria el rectangulo si se agrega al rectangulo entregado*/
@@ -131,7 +126,12 @@ public class Rectangle {
 		for(int i=0; i<childList.size(); i++){
 			Rectangle cR = childList.get(i).getRectangle();
 			
-	        sum += cR.intersection(this).getArea();
+			Rectangle inter = cR.intersection(this);
+			
+			if(inter!=null){
+				sum += inter.getArea();
+			}
+	        
 	    }
 		
 	    return sum;	
@@ -144,8 +144,9 @@ public class Rectangle {
 		
 		/*Incluir el nuevo rectangulo para calcular el overlap*/		
 		Rectangle newR = this.union(r);
-		float newOverlap = newR.overlap(childList);	
 		
+		float newOverlap = newR.overlap(childList);	
+			
 		return Math.abs(newOverlap - oldOverlap);
 	}
 	
@@ -168,7 +169,7 @@ public class Rectangle {
 		if(yB>=yT)
 			return null;
 		
-		return new Rectangle(xL,xR,yT,yB);	
+		return new Rectangle(xL,xR,yB,yT);	
 	}
 	
 	/*Devuelve un nuevo rectangulo, que corresponde a la union de este y el entregado*/
@@ -184,12 +185,24 @@ public class Rectangle {
 	
 	public float[] getCenter(){
 		float[] midPoint = new float[2];
-		
-		midPoint[0] = (right() - left())/2;
-		midPoint[1] = (top() - bottom())/2;
+			
+		midPoint[0] = (right() - left())/2 + left();
+		midPoint[1] = (top() - bottom())/2 + bottom();
 		
 		return midPoint;
 	}
 	
-
+	/*Dibuja un rectangulo*/
+	public void draw(Graphics2D g2d){
+        float height = Math.abs(minY- maxY);
+        float width = Math.abs(maxX - minX);
+       
+        g2d.draw(new Rectangle2D.Double(minX, minY, width, height));
+		
+	}
+	
+	public String toString(){
+		return "("+minX + ","+ minY +")(" + maxX + "," + maxY + ")";
+	}
+	
 }
