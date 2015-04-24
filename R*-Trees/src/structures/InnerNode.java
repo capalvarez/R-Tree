@@ -21,19 +21,13 @@ public class InnerNode implements Node {
 	public boolean isLeaf(){
 		return false;
 	}
-	
-	/*Agrega un hijo al nodo, hay que actualizar el rectangulo que los contiene*/
-	public void addChild(Node newChild){
-		
-	}
-			
-	/*Elimina hijo del nodo, hay que actualizar el rectangulo que los contiene*/
-	public void deleteChild(Node oldChild){
-		/*No estoy muy segura de que voy a recibir para buscar el que se elimina*/
-	}
 
 	public LinkedList<NodeElem> getNodeList() {
 		return childList;
+	}
+	
+	public void setNodeList(LinkedList<NodeElem> l) {
+		childList = l;	
 	}
 
 	public NodeElem findEntry(Node n){
@@ -71,6 +65,8 @@ public class InnerNode implements Node {
 		// TODO Auto-generated method stub
 		
 	}
+
+	
 	
 	
 }

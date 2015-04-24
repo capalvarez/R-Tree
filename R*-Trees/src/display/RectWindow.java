@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import javax.swing.JFrame;
 
 import structures.*;
+import tree.RSTree;
 
 public class RectWindow extends JFrame{
 	MyPanel Panel;
@@ -28,39 +29,75 @@ public class RectWindow extends JFrame{
 	}
 	
 	public static void main(String[] args){
-		Rectangle r = new Rectangle(0,100,0,100);
+		Rectangle r1 = new Rectangle(0,100,0,100);
 		Rectangle r2 = new Rectangle(50,150,50,150);
 		Rectangle r3 = new Rectangle(50,75,50,75);
 		Rectangle r4 = new Rectangle(200,300,200,300);
 		Rectangle r5 = new Rectangle(100,200,100,200);
 		Rectangle r6 = new Rectangle(100,120,100,120);
+		Rectangle r7 = new Rectangle(120,180,160,250);
+		Rectangle r8 = new Rectangle(10,190,100,230);
+		Rectangle r9 = new Rectangle(150,250,150,250);
+		Rectangle r10 = new Rectangle(160,180,170,250);
+		Rectangle r11 = new Rectangle(10,100,100,110);
+		Rectangle r12 = new Rectangle(100,250,120,260);
+		Rectangle r13 = new Rectangle(0,200,0,200);
+		Rectangle r14 = new Rectangle(230,250,300,280);
+		Rectangle r15 = new Rectangle(0,20,10,80);
+		Rectangle r16 = new Rectangle(10,120,50,180);
+		Rectangle r = new Rectangle(10,250,100,250);
 		
-		LinkedList<NodeElem> children = new LinkedList<NodeElem>();
+		NodeElem e = new NodeElem();
 		NodeElem e1 = new NodeElem();
 		NodeElem e2 = new NodeElem();
 		NodeElem e3 = new NodeElem();
 		NodeElem e4 = new NodeElem();
+		NodeElem e5 = new NodeElem();
+		NodeElem e6 = new NodeElem();
+		NodeElem e7 = new NodeElem();
+		NodeElem e8 = new NodeElem();
+		NodeElem e9 = new NodeElem();
+		NodeElem e10 = new NodeElem();
+				
+		e.setRectangle(r);
+		e1.setRectangle(r1);
+		e2.setRectangle(r2);
+		e3.setRectangle(r3);
+		e4.setRectangle(r4);
+		e5.setRectangle(r5);
+		e6.setRectangle(r6);
+		e7.setRectangle(r7);
+		e8.setRectangle(r8);
+		e9.setRectangle(r9);
+		e10.setRectangle(r10);
 		
-		e1.setRectangle(r2);
-		e2.setRectangle(r3);
-		e3.setRectangle(r4);
-		e4.setRectangle(r5);
 		
-		children.add(e1);
-		children.add(e2);
-		children.add(e3);
-		children.add(e4);  
+		RSTree tree = new RSTree(1,1,2);
+		tree.insertSplitRectangle(r8);
+		tree.insertSplitRectangle(r9);
+		tree.insertSplitRectangle(r10);
+		tree.insertSplitRectangle(r1);
+		tree.insertSplitRectangle(r6);
+		tree.insertSplitRectangle(r7);
 		
-		System.out.println(r.overlapEnlargement(r6,children));
-		System.out.println();
-		System.out.println();
-		System.out.println();
-
+		Rectangle[] res = tree.findRectangle(new Rectangle(0,100,0,100));
+		NodeElem eF = new NodeElem();
+		eF.setRectangle(new Rectangle(10,190,100,250));
+		NodeFamily init = new NodeFamily();
+		init.setNode(tree.root);
+		
+		NodeFamily fam = tree.searchNode(eF,init);
+				
+		System.out.println(fam.getNode().getNodeList().get(0).getNode().getNodeList().get(0));
+		//System.out.println("e4" + e4.getRectangle());
+		//System.out.println(tree.getMinOverlap(children, r)[0]);
+		
+	
 	  	RectWindow dw = new RectWindow();
-		dw.showWindow();
-		//dw.drawRectangle(r.union(r2));
+		//dw.showWindow();
+		//dw.drawRectangle(r1.intersection(r3));
 		//dw.drawRectangle(r);
-		dw.drawRectangle(r2);
+		//dw.drawRectangle(r2);
 		//dw.drawRectangle(r4);
 		//dw.drawRectangle(r2.intersection(r));
 		

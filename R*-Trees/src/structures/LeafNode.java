@@ -20,22 +20,13 @@ public class LeafNode implements Node {
 	public boolean isLeaf(){
 		return true;
 	}	
-	
-	/*Insertar un rectangulo en una hoja*/
-	public void insertInLeaf(Rectangle r,int t){
-		if(this.getEntryCount()<2*t){
-			NodeElem newNE = new NodeElem();
-			newNE.setRectangle(r);
-			
-			infoList.add(newNE);		
-		}else{
 		
-			
-		}
-	}
-	
 	public LinkedList<NodeElem> getNodeList() {
 		return infoList;
+	}
+	
+	public void setNodeList(LinkedList<NodeElem> l) {
+		infoList = l;	
 	}
 
 	public boolean isRoot() {
@@ -65,5 +56,7 @@ public class LeafNode implements Node {
 		// TODO Auto-generated method stub
 		
 	}
+
+	
 	
 }

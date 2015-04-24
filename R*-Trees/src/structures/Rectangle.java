@@ -24,17 +24,17 @@ public class Rectangle {
 	
 	public float getMinDim(int dim){
 		if(dim==0){
-			return minX;
+			return left();
 		}else{
-			return minY;
+			return bottom();
 		}
 	}
 	
 	public float getMaxDim(int dim){
 		if(dim==0){
-			return maxX;
+			return right();
 		}else{
-			return maxY;
+			return top();
 		}
 	}
 	
@@ -105,11 +105,11 @@ public class Rectangle {
 	public float areaEnlargement(Rectangle r){
 		/*Obtener el valor del area antes de incluir el nuevo rectangulo*/
 		float oldArea = this.getArea();
-		
+
 		/*Incluir el nuevo rectangulo*/
 		Rectangle newR = this.union(r);
 		float newArea = newR.getArea();	
-		
+
 		return Math.abs(newArea - oldArea);
 	}
 			
@@ -120,36 +120,25 @@ public class Rectangle {
 	}
 	
 	/*Calcula el overlap del rectangulo*/
-	public float overlap(LinkedList<NodeElem> childList){
+	public float overlap(LinkedList<NodeElem> siblingList){
 		float sum = 0;
-	    
-		for(int i=0; i<childList.size(); i++){
-			Rectangle cR = childList.get(i).getRectangle();
+	
+		for(int i=0; i<siblingList.size(); i++){
+			Rectangle cR = siblingList.get(i).getRectangle();
 			
-			Rectangle inter = cR.intersection(this);
-			
-			if(inter!=null){
-				sum += inter.getArea();
+			if(!cR.equals(this)){
+				Rectangle inter = cR.intersection(this);
+				//System.out.println("rectangulo" + cR.toString() + inter.getArea());
+
+				if(inter!=null){
+					sum += inter.getArea();
+				}
 			}
-	        
 	    }
 		
 	    return sum;	
 	}
-		
-	/*Calcula el overlap que aumentaria el rectangulo y al incluir el rectangulo entregado*/
-	public float overlapEnlargement(Rectangle r, LinkedList<NodeElem> childList){
-		/*Calcular el valor del overlap sin incluir el nuevo rectangulo*/
-		float oldOverlap = this.overlap(childList);
-		
-		/*Incluir el nuevo rectangulo para calcular el overlap*/		
-		Rectangle newR = this.union(r);
-		
-		float newOverlap = newR.overlap(childList);	
 			
-		return Math.abs(newOverlap - oldOverlap);
-	}
-	
 	/*Devuelve el margen (perimetro) del rectangulo*/
 	public float getMargin(){
 		return 2*(this.height() + this.width());
@@ -158,7 +147,7 @@ public class Rectangle {
 	/*Devuelve el rectangulo que corresponde a la inteseccion entre el rectangulo y el entregado*/
 	public Rectangle intersection(Rectangle r){
 		float xL = Math.max(this.left(), r.left());
-		float xR = Math.min(this.right(),r.right());
+		float xR = Math.min(this.right(),r.right());	
 		
 		if(xL>=xR)
 			return null;

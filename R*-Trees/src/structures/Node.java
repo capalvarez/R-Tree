@@ -13,6 +13,9 @@ public interface Node {
 	/*Devuelve la lista de hijos que guarda el nodo*/
 	public LinkedList<NodeElem> getNodeList();
 	
+	/*Setea la lista de hijos que guarda el nodo*/
+	public void setNodeList(LinkedList<NodeElem> l);
+	
 	/*Decide si el nodo es la raiz o no*/
 	public boolean isRoot();
 	

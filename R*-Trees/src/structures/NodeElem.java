@@ -6,7 +6,9 @@ public class NodeElem {
 	private Rectangle boundingRectangle;
 	private Node child;
 	
-	public NodeElem(){}
+	public NodeElem(){
+		boundingRectangle = new Rectangle(0,0,0,0);
+	}
 	
 	public NodeElem(Node c, Rectangle r){
 		boundingRectangle = r;
@@ -20,7 +22,6 @@ public class NodeElem {
 	public float getMaxDim(int dim){
 		return boundingRectangle.getMaxDim(dim);
 	}
-	
 	
 	public void setChild(Node n){
 		child = n;
@@ -66,10 +67,33 @@ public class NodeElem {
 			}
 		}
 		
-		boundingRectangle.setCoordinates(left,right,top,bottom);	
+		boundingRectangle.setCoordinates(left,right,bottom,top);	
 	}
 	
 	public boolean equals(NodeElem e){
 		return e.getRectangle().equals(this.getRectangle());
 	}	
+
+	/*Calcula el overlap que aumentaria el rectangulo y al incluir el rectangulo entregado*/
+	public float overlapEnlargement(Rectangle r, LinkedList<NodeElem> siblingList){	
+		/*Calcular el valor del overlap sin incluir el nuevo rectangulo*/
+		float oldOverlap = boundingRectangle.overlap(siblingList);
+		
+		/*Incluir el nuevo rectangulo para calcular el overlap*/		
+		NodeElem nE = new NodeElem();
+		nE.setRectangle(r);
+		child.getNodeList().add(nE);
+		
+		/*Ajusto el MBR para representar que eh incluido un nuevo rectangulo en el hijo*/
+		adjustRectangle();
+				
+		float newOverlap = boundingRectangle.overlap(siblingList);
+				
+		/*Sacar el elemento agregado y reajustar el rectangulo*/
+		child.getNodeList().remove(nE);
+		adjustRectangle();
+		
+		return Math.abs(newOverlap - oldOverlap);
+	}
+
 }
