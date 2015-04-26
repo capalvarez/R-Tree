@@ -72,24 +72,34 @@ public class RectWindow extends JFrame{
 		e10.setRectangle(r10);
 		
 		
-		RSTree tree = new RSTree(1,1,2);
+		RSTree tree = new RSTree(2,1,1);
 		tree.insertSplitRectangle(r8);
 		tree.insertSplitRectangle(r9);
 		tree.insertSplitRectangle(r10);
 		tree.insertSplitRectangle(r1);
 		tree.insertSplitRectangle(r6);
 		tree.insertSplitRectangle(r7);
+		tree.insertReinsertRectangle(r2);
+		tree.insertReinsertRectangle(r3);
+		tree.insertReinsertRectangle(r4);
+		tree.insertReinsertRectangle(r5);
+			
+		Node n = tree.root.getNodeList().get(1).getNode();
+		Node n1 = n.getNodeList().get(0).getNode();
+		Node n2 = n1.getNodeList().get(0).getNode();
+		Node n3 = n2.getNodeList().get(0).getNode();
 		
-		Rectangle[] res = tree.findRectangle(new Rectangle(0,100,0,100));
-		NodeElem eF = new NodeElem();
-		eF.setRectangle(new Rectangle(10,190,100,250));
-		NodeFamily init = new NodeFamily();
-		init.setNode(tree.root);
 		
-		NodeFamily fam = tree.searchNode(eF,init);
-				
-		System.out.println(fam.getNode().getNodeList().get(0).getNode().getNodeList().get(0));
-		//System.out.println("e4" + e4.getRectangle());
+		//tree.deleteEntry(n1.getNodeList().get(0), cont);
+
+		//Node n = tree.root.getNodeList().get(1).getNode();
+		//Node n1 = n.getNodeList().get(0).getNode();
+		//Node n2 = n1.getNodeList().get(0).getNode();
+		//Node n3 = n2.getNodeList().get(1).getNode();
+		
+		
+		
+		System.out.println(n1.getNodeList().get(1).getRectangle());
 		//System.out.println(tree.getMinOverlap(children, r)[0]);
 		
 	
