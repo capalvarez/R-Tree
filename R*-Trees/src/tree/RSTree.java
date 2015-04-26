@@ -112,6 +112,11 @@ public class RSTree {
 				family.addDesc(family.getNode());
 				family.setNode(childList.get(indexOverlap[0]).getNode());
 				
+				/*System.out.println("sin empate");
+				if(e.equals(e2)){
+					System.out.println(root.getNodeList().get(1).getNode().getNodeList().get(0).getNode().getNodeList().get(0).getNode().getNodeList().get(1).getNode().getNodeList().get(0).getRectangle());	
+				}*/
+				
 				return chooseSubtree(family,e,level-1);
 			}		
 		}else{
@@ -132,19 +137,25 @@ public class RSTree {
 				
 				family.addDesc(family.getNode());
 				family.setNode(getMinArea(lastList));
-				
+								
 				return chooseSubtree(family,e,level-1);
 			}else{
 				family.addDesc(family.getNode());
 				family.setNode(minAreaList.get(0).getNode());
-				
+			
+				/*System.out.println("antes sin empate");
+				if(e.equals(e2)){
+					System.out.println(root.getNodeList().get(1).getNode().getNodeList().get(0).getNode().getNodeList().get(0).getNode().getNodeList().get(1).getNode().getNodeList().get(0).getRectangle());	
+					System.out.println("e " + e.getRectangle());
+					System.out.println("me fui a " +minAreaList.get(0).getNode().getNodeList().get(0).getRectangle()); 
+				}*/
 				return chooseSubtree(family,e,level-1);
 			}
 		}	
 	}
 	
 	/*Entrega un arreglo con los indices de los elementos que tengan el minimo overlap*/
-	public Integer[] getMinOverlap(LinkedList<NodeElem> children, Rectangle r){
+	public Integer[] getMinOverlap(LinkedList<NodeElem> children, Rectangle r){		
 		float overlap = Float.MAX_VALUE;
 		ArrayList<Integer> index = new ArrayList<Integer>();
 		
@@ -464,13 +475,13 @@ public class RSTree {
 	}
 	
 	/*Insertar un nodo a una cierta altura de forma obligatoria*/
-	public void insertData(NodeElem e, int level){
+	public void insertData(NodeElem e, int level){	
 		NodeFamily fam = new NodeFamily();
 		fam.setNode(root);
-		fam = chooseSubtree(fam,e,level);
-				
+		
+		fam = chooseSubtree(fam,e,level);	 
 		Node n = fam.getNode(); 
-		n.getNodeList().add(e);
+		n.getNodeList().add(e);	
 		
 		if(n.getEntryCount()>M){
 			OverflowRes ovr = overflowTreatment(n,fam,level);
@@ -489,7 +500,8 @@ public class RSTree {
 			
 			n = p;			
 		}
-		
+		//System.out.println("fin");
+		//System.out.println(root.getNodeList().get(1).getNode().getNodeList().get(0).getNode().getNodeList().get(0).getNode().getNodeList().get(1).getNode().getNodeList().get(0).getRectangle());
 		/*Termine la insercion, por lo tanto debo reiniciar la lista de niveles visitados*/
 		levelsVisited = new LinkedList<Integer>();
 	}
@@ -498,8 +510,10 @@ public class RSTree {
 		OverflowRes res = new OverflowRes(n);
 				
 		if(!n.isRoot()){
-			if(!levelsVisited.contains(level)){				
+			if(!levelsVisited.contains(level)){	
+				//System.out.println(root.getNodeList().get(1).getNode().getNodeList().get(0).getNode().getNodeList().get(0).getNode().getNodeList().get(1).getNode().getNodeList().get(0).getRectangle());
 				reinsert(n, fam, level);
+				levelsVisited.add(level);
 			}else{
 				/*Si ya pase por este nivel en la insercion de este rectangulo, entonces hago split del nodo*/
 				Node[] newNodes = split(n);
@@ -511,42 +525,72 @@ public class RSTree {
 	
 	public void propagateSplit(NodeFamily fam, OverflowRes over){
 		Node ll = over.getNewNode();
-		Node p = fam.getParent();
 		
-		/*Crear una nueva entrada a insertar en el padre*/
-		NodeElem eLL = new NodeElem();
-		eLL.setChild(ll);
-		eLL.setRectangle(getBoundingRectangle(ll.getNodeList()));
-		
-		p.getNodeList().add(eLL);
-		
-		/*Reviso si hay overflow y propago de ser necesario*/
-		if(p.getEntryCount()>M){
-			OverflowRes res = overflowTreatment(p,fam,fam.getTreeHeight());
+		if(!fam.getNode().isRoot()){
+			Node p = fam.getParent();
 			
-			if(res.split()){
-				propagateSplit(fam,res);
-			}	
-		}	
+			/*Crear una nueva entrada a insertar en el padre*/
+			NodeElem eLL = new NodeElem();
+			eLL.setChild(ll);
+			eLL.setRectangle(getBoundingRectangle(ll.getNodeList()));
+			
+			p.getNodeList().add(eLL);
+			
+			/*Reviso si hay overflow y propago de ser necesario*/
+			if(p.getEntryCount()>M){
+				OverflowRes res = overflowTreatment(p,fam,fam.getTreeHeight());
+				
+				if(res.split()){
+					propagateSplit(fam,res);
+				}	
+			}
+		}else{
+			/*Si recibo un split de la raíz, no puedo seguir propagando hacia arriba, solo me queda
+			 * hacer crecer el arbol*/
+			Node newRoot = new InnerNode();
+			NodeElem e1 = new NodeElem();
+			NodeElem e2 = new NodeElem();
+			
+			e1.setChild(fam.getNode());
+			e1.adjustRectangle();
+			
+			e2.setChild(ll);
+			e2.adjustRectangle();
+			
+			/*Los hijos ya no son la raiz*/
+			fam.getNode().setAsNotRoot();
+			ll.setAsNotRoot();
+			newRoot.setAsRoot();
+			
+			LinkedList<NodeElem> rootChildren = new LinkedList<NodeElem>();
+			rootChildren.add(e1);
+			rootChildren.add(e2);
+			newRoot.setNodeList(rootChildren);
+			
+			root = newRoot;
+			height++;		
+		}
+		
 	}
 	
 	/*Para reinsertar, se debe entregar como parametro el MBR del padre*/
 	public void reinsert(Node n, NodeFamily fam, int level){
-		Rectangle mbr = fam.getParent().findEntry(n).getRectangle();
+		Rectangle mbr = fam.viewParent().findEntry(n).getRectangle();
 		LinkedList<NodeElem> list = n.getNodeList();
 		sortByDistanceCenter(list, mbr);
 		
 		List<NodeElem> deleteList = list.subList(0,p);
-
+		List<NodeElem> copy = new LinkedList<NodeElem>(deleteList);
+		
 		int[] height = new int[p];
 				
-		for(int i=0; i<deleteList.size(); i++){
+		for(int i=0; i<p; i++){
 			height[i] = deleteEntry(deleteList.get(i),fam);
 		}
-		
-		for(int i=0; i<deleteList.size(); i++){
-			insertData(deleteList.get(i),height[i]);
-		}
+				
+		//for(int i=0; i<p; i++){
+			//insertData(copy.get(i),height[i]);
+		//}
 	}
 	
 	public void sortByDistanceCenter(LinkedList<NodeElem> list, Rectangle mbr){
@@ -573,10 +617,10 @@ public class RSTree {
 		/*Elimino la entrada del nodo correspondiente*/
 		cont.getNode().getNodeList().remove(r);
 		
+		NodeFamily newFamily = cont.getClone();
 		/*Propago los cambios*/
-		condenseTree(cont);
+		condenseTree(newFamily);
 		
-		/*Devolver la altura esta mal asi!*/
 		return cont.getTreeHeight();
 	}
 	
@@ -587,6 +631,7 @@ public class RSTree {
 		
 		while(!n.isRoot()){
 			Node parent = init.getParent();
+			
 			NodeElem entryN = parent.findEntry(n);
 		
 			entryN.adjustRectangle();

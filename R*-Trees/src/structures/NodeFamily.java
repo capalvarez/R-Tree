@@ -8,6 +8,10 @@ public class NodeFamily {
 	
 	public NodeFamily(){}
 	
+	private NodeFamily(Stack<Node> fam){
+		family = fam;
+	}
+	
 	public void setNode(Node n){
 		node = n;
 	}
@@ -24,8 +28,19 @@ public class NodeFamily {
 		return family.pop();
 	}
 	
+	public Node viewParent(){
+		return family.peek();
+	}
+	
 	public int getTreeHeight(){
 		return family.size();
+	}
+
+	public NodeFamily getClone(){
+		NodeFamily copy = new NodeFamily((Stack<Node>) family.clone());
+		copy.setNode(node);
+		
+		return copy;
 	}
 
 }

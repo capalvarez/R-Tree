@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 import structures.*;
 import tree.RSTree;
 
+
 public class RectWindow extends JFrame{
 	MyPanel Panel;
 	
@@ -47,31 +48,6 @@ public class RectWindow extends JFrame{
 		Rectangle r16 = new Rectangle(10,120,50,180);
 		Rectangle r = new Rectangle(10,250,100,250);
 		
-		NodeElem e = new NodeElem();
-		NodeElem e1 = new NodeElem();
-		NodeElem e2 = new NodeElem();
-		NodeElem e3 = new NodeElem();
-		NodeElem e4 = new NodeElem();
-		NodeElem e5 = new NodeElem();
-		NodeElem e6 = new NodeElem();
-		NodeElem e7 = new NodeElem();
-		NodeElem e8 = new NodeElem();
-		NodeElem e9 = new NodeElem();
-		NodeElem e10 = new NodeElem();
-				
-		e.setRectangle(r);
-		e1.setRectangle(r1);
-		e2.setRectangle(r2);
-		e3.setRectangle(r3);
-		e4.setRectangle(r4);
-		e5.setRectangle(r5);
-		e6.setRectangle(r6);
-		e7.setRectangle(r7);
-		e8.setRectangle(r8);
-		e9.setRectangle(r9);
-		e10.setRectangle(r10);
-		
-		
 		RSTree tree = new RSTree(2,1,1);
 		tree.insertSplitRectangle(r8);
 		tree.insertSplitRectangle(r9);
@@ -84,10 +60,7 @@ public class RectWindow extends JFrame{
 		tree.insertReinsertRectangle(r4);
 		tree.insertReinsertRectangle(r5);
 			
-		Node n = tree.root.getNodeList().get(1).getNode();
-		Node n1 = n.getNodeList().get(0).getNode();
-		Node n2 = n1.getNodeList().get(0).getNode();
-		Node n3 = n2.getNodeList().get(0).getNode();
+		System.out.println(ObjectSizeFetcher.getObjectSize(r));
 		
 		
 		//tree.deleteEntry(n1.getNodeList().get(0), cont);
@@ -99,7 +72,7 @@ public class RectWindow extends JFrame{
 		
 		
 		
-		System.out.println(n1.getNodeList().get(1).getRectangle());
+		//System.out.println(n2.getNodeList().get(1).getNode().getNodeList().get(0).getRectangle());
 		//System.out.println(tree.getMinOverlap(children, r)[0]);
 		
 	

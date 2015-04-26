@@ -67,7 +67,7 @@ public class NodeElem {
 			}
 		}
 		
-		boundingRectangle.setCoordinates(left,right,bottom,top);	
+		boundingRectangle = new Rectangle(left,right,bottom,top);	
 	}
 	
 	public boolean equals(NodeElem e){
@@ -85,14 +85,13 @@ public class NodeElem {
 		child.getNodeList().add(nE);
 		
 		/*Ajusto el MBR para representar que eh incluido un nuevo rectangulo en el hijo*/
-		adjustRectangle();
-				
+		adjustRectangle();		
 		float newOverlap = boundingRectangle.overlap(siblingList);
 				
-		/*Sacar el elemento agregado y reajustar el rectangulo*/
-		child.getNodeList().remove(nE);
+		/*Sacar el elemento agregado y reajustar el rectangulo*/	
+		child.getNodeList().remove(nE);	
 		adjustRectangle();
-		
+
 		return Math.abs(newOverlap - oldOverlap);
 	}
 
