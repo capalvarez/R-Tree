@@ -4,7 +4,8 @@ import java.util.Stack;
 
 public class NodeFamily {
 	private Node node = null;
-	private Stack<Node> family = new Stack<Node>(); 
+	private Stack<Node> family = new Stack<Node>();
+	private Stack<Integer> index = new Stack<Integer>();
 	
 	public NodeFamily(){}
 	
@@ -20,16 +21,25 @@ public class NodeFamily {
 		return node;
 	}
 	
-	public void addDesc(Node child){
+	public void addDesc(Node child, int i){
 		family.push(child);
+		index.push(i);
 	}
 	
 	public Node getParent(){
 		return family.pop();
 	}
 	
+	public int getNextIndex(){
+		return index.pop(); 
+	}
+	
 	public Node viewParent(){
 		return family.peek();
+	}
+	
+	public Integer viewIndex(){
+		return index.peek();
 	}
 	
 	public int getTreeHeight(){

@@ -2,6 +2,7 @@ package structures;
 
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
+import java.nio.ByteBuffer;
 import java.util.LinkedList;
 
 import display.RectWindow;
@@ -128,7 +129,6 @@ public class Rectangle {
 			
 			if(!cR.equals(this)){
 				Rectangle inter = cR.intersection(this);
-				//System.out.println("rectangulo" + cR.toString() + inter.getArea());
 
 				if(inter!=null){
 					sum += inter.getArea();
@@ -138,6 +138,19 @@ public class Rectangle {
 		
 	    return sum;	
 	}
+	
+	/*Calcula el overlap que aumentaria el rectangulo y al incluir el rectangulo entregado*/
+	public float overlapEnlargement(Rectangle r, LinkedList<NodeElem> siblingList){	
+		/*Calcular el valor del overlap sin incluir el nuevo rectangulo*/
+		float oldOverlap = this.overlap(siblingList);
+		
+		/*Incluir el nuevo rectangulo para calcular el overlap*/		
+		Rectangle newRectangle = this.union(r);	
+		float newOverlap = newRectangle.overlap(siblingList);
+
+		return Math.abs(newOverlap - oldOverlap);
+	}
+	
 			
 	/*Devuelve el margen (perimetro) del rectangulo*/
 	public float getMargin(){
@@ -194,4 +207,16 @@ public class Rectangle {
 		return "("+minX + ","+ minY +")(" + maxX + "," + maxY + ")";
 	}
 	
+	public byte[] getByteForm(byte[] bytes, int pos){
+		ByteBuffer.wrap(bytes, pos, 8).putFloat(this.left());	
+		pos += 8;
+		ByteBuffer.wrap(bytes, pos, 8).putFloat(this.right());	
+		pos += 8;
+		ByteBuffer.wrap(bytes, pos, 8).putFloat(this.bottom());	
+		pos += 8;
+		ByteBuffer.wrap(bytes, pos, 8).putFloat(this.top());	
+		pos += 8;
+		
+		return bytes;
+	}
 }

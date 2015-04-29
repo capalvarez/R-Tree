@@ -3,6 +3,7 @@ package display;
 import java.awt.EventQueue;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.io.IOException;
 import java.util.LinkedList;
 
 import javax.swing.JFrame;
@@ -29,7 +30,7 @@ public class RectWindow extends JFrame{
 		validate();		
 	}
 	
-	public static void main(String[] args){
+	public static void main(String[] args) throws IOException{
 		Rectangle r1 = new Rectangle(0,100,0,100);
 		Rectangle r2 = new Rectangle(50,150,50,150);
 		Rectangle r3 = new Rectangle(50,75,50,75);
@@ -48,7 +49,7 @@ public class RectWindow extends JFrame{
 		Rectangle r16 = new Rectangle(10,120,50,180);
 		Rectangle r = new Rectangle(10,250,100,250);
 		
-		RSTree tree = new RSTree(2,1,1);
+		RSTree tree = new RSTree(2,1,1,5,203);
 		tree.insertSplitRectangle(r8);
 		tree.insertSplitRectangle(r9);
 		tree.insertSplitRectangle(r10);
@@ -59,9 +60,7 @@ public class RectWindow extends JFrame{
 		tree.insertReinsertRectangle(r3);
 		tree.insertReinsertRectangle(r4);
 		tree.insertReinsertRectangle(r5);
-			
-		System.out.println(ObjectSizeFetcher.getObjectSize(r));
-		
+				
 		
 		//tree.deleteEntry(n1.getNodeList().get(0), cont);
 
