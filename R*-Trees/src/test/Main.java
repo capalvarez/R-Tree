@@ -22,7 +22,7 @@ public class Main {
 		
 		RectangleGenerator rG = new RectangleGenerator(min,max,minArea,maxArea);
 		
-		for(int i=9;i<15;i=i+3){
+		for(int i=9;i<21;i=i+3){
 			int rNumber = (int) Math.pow(2, i);
 			
 			/*Generar los 2^i rectangulos a insertar*/
@@ -96,7 +96,7 @@ public class Main {
 			System.out.println("");
 			
 			/*Realizar la busqueda en el arbol de reinsert*/
-			/*System.out.println("Iniciando busqueda en el arbol de reinsert");
+			System.out.println("Iniciando busqueda en el arbol de reinsert");
 			long startTimeSearchReinsert = System.currentTimeMillis();
 			
 			for(int l=0;l<search.length;l++){
@@ -105,7 +105,7 @@ public class Main {
 			
 			long endTimeSearchReinsert = System.currentTimeMillis();
 			System.out.println("Busqueda realizada en:  " + (endTimeSearchReinsert - startTimeSearchReinsert) + " milis");
-			System.out.println("Cantidad de accesos a disco: " + reinsertTree.getMemoryAccess());*/
+			System.out.println("Cantidad de accesos a disco: " + reinsertTree.getMemoryAccess());
 	
 		}
 		
