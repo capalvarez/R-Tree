@@ -17,7 +17,7 @@ public class Main {
 		int M = 200;
 		int m = (int) Math.floor(M*0.4);
 		int p = (int) Math.floor(M*0.3);
-		int buffSize = 3;
+		int buffSize = 16;
 		int nodeSize = 4820;
 		
 		RectangleGenerator rG = new RectangleGenerator(min,max,minArea,maxArea);
@@ -54,7 +54,7 @@ public class Main {
 			System.out.println("");
 			
 			/*Construir el arbol utilizando insercion con reinsert*/
-			/*System.out.println("Iniciando construccion con reinsert");
+			System.out.println("Iniciando construccion con reinsert");
 			RSTree reinsertTree = new RSTree(M,m,p,buffSize,nodeSize);
 			long startTimeReinsert = System.currentTimeMillis();
 			
@@ -66,7 +66,7 @@ public class Main {
 			System.out.println("Tiempo utilizado: " + (endTimeReinsert - startTimeReinsert) + " milis");
 			System.out.println("Cantidad de accesos a disco: " + reinsertTree.getMemoryAccess());
 			
-			reinsertTree.resetMemoryAccess();*/
+			reinsertTree.resetMemoryAccess();
 			
 			System.out.println("");
 			

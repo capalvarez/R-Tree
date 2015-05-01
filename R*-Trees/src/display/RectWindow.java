@@ -80,17 +80,18 @@ public class RectWindow extends JFrame{
 		
 		//System.out.println(tree.findRectangle(r2).length);
 
-		/*MemoryMng mem = tree.mem;
+		MemoryMng mem = tree.mem;
 		Node n1 = mem.loadNode(tree.root.getNodeList().get(0).getNode());
-		Node n2 = mem.loadNode(n1.getNodeList().get(1).getNode());
-		Node n3 = mem.loadNode(n2.getNodeList().get(1).getNode());
+		Node n2 = mem.loadNode(n1.getNodeList().get(0).getNode());
+		/*Node n3 = mem.loadNode(n2.getNodeList().get(1).getNode());
 		Node n4 = mem.loadNode(n3.getNodeList().get(1).getNode());
-		Node n5 = mem.loadNode(n4.getNodeList().get(1).getNode());
+		Node n5 = mem.loadNode(n4.getNodeList().get(1).getNode());*/
 		
-		System.out.println(tree.root.getNodeList().get(1).getRectangle());
-		System.out.println(n1.getPos());
-		System.out.println(n2.getPos());
-		System.out.println(n3.getPos());
+		//System.out.println(n1.getNodeList().get(0).getRectangle());
+		//System.out.println(n1.getNodeList().get(1).getRectangle());
+		//System.out.println(n1.getNodeList().get(0).getRectangle());
+		//System.out.println(n1.getNodeList().get(1).getRectangle());
+		/*System.out.println(n3.getPos());
 		System.out.println(n4.getPos());
 		System.out.println(n5.getPos());*/
 		
