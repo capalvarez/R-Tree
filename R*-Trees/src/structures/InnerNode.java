@@ -32,7 +32,7 @@ public class InnerNode implements Node {
 	}
 	
 	public void addChild(NodeElem e){
-		
+		childList.add(e);
 	}
 	
 	public long getChildPos(int i){
@@ -57,7 +57,7 @@ public class InnerNode implements Node {
 
 	public byte[] getByteForm(){
 		/*cambiar el largo a futuro, hay que calcularlo*/
-		byte[] bytes = new byte[90];
+		byte[] bytes = new byte[20+24*max];
 		
 		int pos = 0;
 		int root = isRoot? 1:0;
@@ -68,10 +68,10 @@ public class InnerNode implements Node {
 		ByteBuffer.wrap(bytes, pos, 4).putInt(0);
 		pos += 4;
 		
-		ByteBuffer.wrap(bytes, pos, 4).putLong(archivePos);
+		ByteBuffer.wrap(bytes, pos, 8).putLong(archivePos);
 		pos += 8;
 		
-		ByteBuffer.wrap(bytes, pos, 8).putInt(getEntryCount());
+		ByteBuffer.wrap(bytes, pos, 4).putInt(getEntryCount());
 		pos += 4;
 		
 		for (int i = 0; i <getEntryCount(); i++) {
@@ -97,10 +97,8 @@ public class InnerNode implements Node {
 		archivePos = pos;
 	}
 
-	@Override
 	public void removeChild(NodeElem e) {
-		// TODO Auto-generated method stub
-		
+		childList.remove(e);
 	}
 
 }

@@ -8,6 +8,8 @@ import java.util.LinkedList;
 
 import javax.swing.JFrame;
 
+import externalMemory.MemoryMng;
+
 import structures.*;
 import tree.RSTree;
 
@@ -47,35 +49,58 @@ public class RectWindow extends JFrame{
 		Rectangle r14 = new Rectangle(230,250,300,280);
 		Rectangle r15 = new Rectangle(0,20,10,80);
 		Rectangle r16 = new Rectangle(10,120,50,180);
-		Rectangle r = new Rectangle(10,250,100,250);
+		Rectangle r17 = new Rectangle(10,250,100,250);
 		
-		RSTree tree = new RSTree(2,1,1,5,203);
-		tree.insertSplitRectangle(r8);
-		tree.insertSplitRectangle(r9);
-		tree.insertSplitRectangle(r10);
-		tree.insertSplitRectangle(r1);
-		tree.insertSplitRectangle(r6);
-		tree.insertSplitRectangle(r7);
+		//Rectangle[] rectangles =  {r1,r2,r3,r4,r5,r6,r7,r8,r9,r10,r11,r12,r13,r14,r15,r16,r17};
+		
+		RSTree tree = new RSTree(2,1,1,5,68);
+		tree.insertReinsertRectangle(r1);
 		tree.insertReinsertRectangle(r2);
 		tree.insertReinsertRectangle(r3);
 		tree.insertReinsertRectangle(r4);
 		tree.insertReinsertRectangle(r5);
+		tree.insertReinsertRectangle(r6);
+		tree.insertReinsertRectangle(r7);
+		tree.insertReinsertRectangle(r8);
+		tree.insertReinsertRectangle(r9);
+		tree.insertReinsertRectangle(r10);
+		tree.insertReinsertRectangle(r11);
+		tree.insertReinsertRectangle(r12);
+		tree.insertReinsertRectangle(r13);
+		tree.insertReinsertRectangle(r14);
+		tree.insertReinsertRectangle(r15);
+		tree.insertReinsertRectangle(r16);
+		tree.insertReinsertRectangle(r17);
+		
+		
 				
+		//for(int i=0;i<17;i++){
+			//System.out.println(rectangles[i].contains(r2));
+		//}
 		
-		//tree.deleteEntry(n1.getNodeList().get(0), cont);
+		//System.out.println(tree.findRectangle(r2).length);
 
-		//Node n = tree.root.getNodeList().get(1).getNode();
-		//Node n1 = n.getNodeList().get(0).getNode();
-		//Node n2 = n1.getNodeList().get(0).getNode();
-		//Node n3 = n2.getNodeList().get(1).getNode();
+		/*MemoryMng mem = tree.mem;
+		Node n1 = mem.loadNode(tree.root.getNodeList().get(0).getNode());
+		Node n2 = mem.loadNode(n1.getNodeList().get(1).getNode());
+		Node n3 = mem.loadNode(n2.getNodeList().get(1).getNode());
+		Node n4 = mem.loadNode(n3.getNodeList().get(1).getNode());
+		Node n5 = mem.loadNode(n4.getNodeList().get(1).getNode());
+		
+		System.out.println(tree.root.getNodeList().get(1).getRectangle());
+		System.out.println(n1.getPos());
+		System.out.println(n2.getPos());
+		System.out.println(n3.getPos());
+		System.out.println(n4.getPos());
+		System.out.println(n5.getPos());*/
 		
 		
 		
-		//System.out.println(n2.getNodeList().get(1).getNode().getNodeList().get(0).getRectangle());
-		//System.out.println(tree.getMinOverlap(children, r)[0]);
+		//System.out.println(n.getNodeList().get(0).getRectangle());
+		//System.out.println(tree.root.isLeaf());
 		
 	
-	  	RectWindow dw = new RectWindow();
+	  	//RectWindow dw = new RectWindow();
 		//dw.showWindow();
 		//dw.drawRectangle(r1.intersection(r3));
 		//dw.drawRectangle(r);

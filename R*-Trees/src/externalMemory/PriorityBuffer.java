@@ -8,7 +8,7 @@ public class PriorityBuffer {
 	
 	public PriorityBuffer(int numEl) {
 		list = new LinkedList<Integer>();
-		
+
 		for(int i=numEl-1;i >= 0;i--){
 			list.add(i);
 		}

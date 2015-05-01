@@ -3,14 +3,16 @@ package structures;
 import java.nio.ByteBuffer;
 import java.util.LinkedList;
 
+
 public class LeafNode implements Node {
 	private boolean isRoot;
-	private LinkedList<NodeElem> infoList;
+	private LinkedList<NodeElem> infoList = new LinkedList<NodeElem>();
 	private long archivePos;	
-	private int childNum;
 	private int max;
 	
-	public LeafNode(){}
+	public LeafNode(int M){
+		this.max = M;
+	}
 	
 	public LeafNode(LinkedList<NodeElem> info, int M){
 		infoList = info;
@@ -18,7 +20,7 @@ public class LeafNode implements Node {
 	}
 		
 	public int getEntryCount(){
-		return childNum;
+		return infoList.size();
 	}
 
 	public boolean isLeaf(){
@@ -45,10 +47,6 @@ public class LeafNode implements Node {
 		return isRoot;
 	}
 
-	public NodeElem findEntry(Node n) {
-		return null;
-	}
-
 	public void setAsRoot() {
 		isRoot = true;	
 	}
@@ -59,7 +57,7 @@ public class LeafNode implements Node {
 
 	public byte[] getByteForm(){
 		/*cambiar el largo a futuro, hay que calcularlo*/
-		byte[] bytes = new byte[90];
+		byte[] bytes = new byte[20+24*max];
 		
 		int pos = 0;
 		int root = isRoot? 1:0;
@@ -70,13 +68,15 @@ public class LeafNode implements Node {
 		ByteBuffer.wrap(bytes, pos, 4).putInt(1);
 		pos += 4;
 		
-		ByteBuffer.wrap(bytes, pos, 4).putLong(archivePos);
+		ByteBuffer.wrap(bytes, pos, 8).putLong(archivePos);
 		pos += 8;
 		
-		ByteBuffer.wrap(bytes, pos, 8).putInt(getEntryCount());
+		//System.out.println("guardando el nodo hoja " + infoList.get(0).getRectangle() + " con " + getEntryCount() + " hijos");
+		ByteBuffer.wrap(bytes, pos, 4).putInt(getEntryCount());
 		pos += 4;
 		
-		for (int i = 0; i <getEntryCount(); i++) {
+		for (int i = 0; i < getEntryCount(); i++) {
+			//System.out.println(pos);
 			infoList.get(i).getRectangle().getByteForm(bytes,pos);
 			pos += 16 ;
 		}
@@ -100,6 +100,7 @@ public class LeafNode implements Node {
 	}
 	
 	public void removeChild(NodeElem e) {
-	
+		infoList.remove(e);
 	}
+	
 }

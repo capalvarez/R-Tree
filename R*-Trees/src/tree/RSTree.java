@@ -3,11 +3,12 @@ package tree;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import externalMemory.MemoryMng;
 
@@ -21,19 +22,21 @@ public class RSTree {
 		
 	public Node root;
 	public int height = 0;
-	private MemoryMng mem;
+	public MemoryMng mem;
 	private long lastPos = 0;
+	private int nodeSize;
 	
 	/*Variable que guarda los niveles que he visitado para esta insercion (insercion con reinsert)*/
-	private LinkedList<Integer> levelsVisited = new LinkedList<Integer>();
+	private Set<Integer> levelsVisited = new HashSet<Integer>();
 		
 	/*Inicializa un nuevo R*-Tree*/	
-	public RSTree(int M, int m, int p, int buffSize, int nodeSize) throws FileNotFoundException{
+	public RSTree(int M, int m, int p, int buffSize, int nodeSize) throws IOException{
 		this.M = M;
 		this.m = m;
 		this.p = p; 
+		this.nodeSize = nodeSize;
 		
-		root = new LeafNode();
+		root = new LeafNode(M);
 		root.setAsRoot();
 	
 		mem = new MemoryMng(buffSize,nodeSize,M);
@@ -44,7 +47,17 @@ public class RSTree {
 	}
 	
 	public long getNewPos(){
-		return 0;
+		lastPos = lastPos + nodeSize;
+		
+		return lastPos;
+	}
+	
+	public int getMemoryAccess(){
+		return mem.getMemoryAccess();
+	}
+	
+	public void resetMemoryAccess(){
+		mem.resetMemoryAccess();
 	}
 	
 	public Integer[] loop(int n) {
@@ -63,33 +76,51 @@ public class RSTree {
 		NodeFamily init = new NodeFamily();
 		init.setNode(root);
 		
-		NodeFamily c = chooseSubtree(init,r);	
-		NodeElem e = new NodeElem(getNewPos(),r);
+		//System.out.println("a insertar " + r);
+		//if(r.equals(new Rectangle(10,190,100,230))){
+			//System.out.println("mira tu" + mem.loadNode(1088).getChildPos(1));
+		//}
+		
+		NodeElem e = new NodeElem(-1,r);
+		NodeFamily c = chooseSubtree(init,e);
 		
 		c.getNode().addChild(e);
+		//System.out.println(c.getNode().isLeaf());
 		
 		if(c.getNode().getEntryCount()>M){
-			Node[] newNodes = split(c.getNode());		
+			Node[] newNodes = split(c.getNode());
+			//System.out.println("resultado de split es hoja?" + newNodes[1].isLeaf());
 			c.setNode(newNodes[0]);			
 			adjustTreeSplit(c,newNodes[1]);
 		}else{		
 			adjustTree(c);
 		}
+		
+		//System.out.println("termine de insertar");
+
 	}
 
-	public NodeFamily chooseSubtree(NodeFamily family, Rectangle r) throws IOException{	
-		NodeElem e = new NodeElem(getNewPos(),r);
-		
+	public NodeFamily chooseSubtree(NodeFamily family, NodeElem e) throws IOException{	
+		/*if(root.getEntryCount()==2){
+			System.out.println("Raiz tiene");
+			System.out.println(root.getNodeList().get(0).getRectangle());
+			System.out.println(root.getNodeList().get(1).getRectangle());
+		}*/
+		//System.out.println("altura del arbol " + getHeight());
 		return chooseSubtree(family,e,getHeight());
 	}
 	
 	public NodeFamily chooseSubtree(NodeFamily family, NodeElem e, int level) throws IOException{
-		if(family.getNode().isLeaf() || level==0){
+		//System.out.println("nivel " + level);
+		if(family.getNode().isLeaf() || level==0){			
+			//System.out.println("fin");
 			return family;
 		}
-		
+		//System.out.println(family.getNode().getNodeList().get(0).getRectangle());
 		LinkedList<NodeElem> childList = family.getNode().getNodeList();
 		Node firstChild = mem.loadNode(family.getNode().getChildPos(0));
+		//System.out.println("direccion del nodo " + family.getNode().getPos());
+		//System.out.println("direccion del primer hijo" + firstChild.getPos());
 		
 		/*Los hijos son hojas, basta verificar que el primero lo sea*/
 		if(firstChild.isLeaf()){
@@ -104,36 +135,56 @@ public class RSTree {
 					int index = getMinArea(family.getNode(),indexArea);
 					
 					family.addDesc(family.getNode(),index);
-					family.setNode(mem.loadNode(family.getNode().getChildPos(index)));
+					Node node = mem.loadNode(family.getNode().getChildPos(index));
+					family.setNode(node);
+					//System.out.println("indice hacia hoja 1" + index+ " hoja tiene " + node.getNodeList().get(0).getRectangle());
 					
 					return chooseSubtree(family,e,level-1);
 				}else{
 					family.addDesc(family.getNode(),indexArea[0]);
-					family.setNode(mem.loadNode(family.getNode().getChildPos(indexArea[0])));
-					
+					Node node = mem.loadNode(family.getNode().getChildPos(indexArea[0]));
+					family.setNode(node);
+					//System.out.println("indice hacia hoja 2" + indexArea[0]+ " hoja tiene " + node.getNodeList().get(0).getRectangle());
 					return chooseSubtree(family,e,level-1);
 				}
 			}else{
+				/*System.out.println("direccion del nodo " + family.getNode().getPos());
+				for(int i=0;i<family.getNode().getEntryCount();i++){
+					System.out.println(family.getNode().getChildPos(i));
+				}*/
+		
 				family.addDesc(family.getNode(),indexOverlap[0]);
-				family.setNode(mem.loadNode(family.getNode().getChildPos(indexOverlap[0])));
+				Node node = mem.loadNode(family.getNode().getChildPos(indexOverlap[0]));
+				family.setNode(node);
 				
+				//System.out.println("direccion de nodo en que trabajo" + node.getPos());
+				//System.out.println("indice hacia hoja 3" + indexOverlap[0]+ " direccion de hoja" + node.getNodeList().get(0).getNode());
 				return chooseSubtree(family,e,level-1);
 			}		
 		}else{
 			Integer[] indexArea = getMinAreaEnlarg(loop(childList.size()),childList,e.getRectangle());
-						
+			//System.out.println("direccion del nodo 1 " + family.getNode().getPos());			
 			/*Si hay empate, se decide buscando el rectangulo con menor area*/
 			if(indexArea.length>1){
 				int index = getMinArea(family.getNode(),indexArea);
 				
 				family.addDesc(family.getNode(),index);
 				family.setNode(mem.loadNode(family.getNode().getChildPos(index)));
-								
+				/*System.out.println("direccion de nodo en que trabajo 1 " + family.getNode().getPos());
+				System.out.println("indice1 " + index);	*/
+				
 				return chooseSubtree(family,e,level-1);
 			}else{
+				//System.out.println("direccion del nodo 2 " + family.getNode().getPos());
 				family.addDesc(family.getNode(),indexArea[0]);
+				
+				//System.out.println("direccion del nodo 3 " + family.getNode().getPos());
+				
 				family.setNode(mem.loadNode(family.getNode().getChildPos(indexArea[0])));
-	
+				
+				/*System.out.println("direccion del nodo 4 " + family.getNode().getPos());			
+				System.out.println("direccion de nodo en que trabajo 2 " + family.getNode().getPos());*/
+				
 				return chooseSubtree(family,e,level-1);
 			}
 		}	
@@ -209,7 +260,7 @@ public class RSTree {
 		return index;			
 	}
 	
-	public void adjustTreeSplit(NodeFamily fam, Node n2){
+	public void adjustTreeSplit(NodeFamily fam, Node n2) throws IOException{
 		Node n = fam.getNode();
 		
 		while(!n.isRoot()){
@@ -220,7 +271,7 @@ public class RSTree {
 			p.getNodeList().get(i).setRectangle(r);
 		
 			Rectangle r2 = getBoundingRectangle(n2.getNodeList());
-			NodeElem newE = new NodeElem(getNewPos(),r2);
+			NodeElem newE = new NodeElem(n2.getPos(),r2);
 		
 			if(p.getEntryCount()<M){
 				p.addChild(newE);
@@ -233,31 +284,40 @@ public class RSTree {
 				p.addChild(newE);
 				Node[] newNodes = split(p);
 				n = newNodes[0];
-				n2 = newNodes[1];		
+				n2 = newNodes[1];
+			
+				mem.saveNode(n);
+				mem.saveNode(n2);
 			}
 		}
 		/* Si salí del loop sin haber escapado a adjustTree, es porque la raiz fue dividida*/
 		Node newRoot = new InnerNode(getNewPos(),M);
-		
+				
 		/*Asigno como hijos de la raiz los dos nodos obtenidos del split*/
 		Rectangle r = getBoundingRectangle(n.getNodeList());
 		NodeElem child1 = new NodeElem(n.getPos(),r);
 		newRoot.addChild(child1);
 		
 		Rectangle r2 = getBoundingRectangle(n2.getNodeList());
-		NodeElem child2 = new NodeElem(n2.getPos(),r);
+		NodeElem child2 = new NodeElem(n2.getPos(),r2);
 		newRoot.addChild(child2);
 				
 		/*Los hijos ya no son la raiz*/
 		n.setAsNotRoot();
 		n2.setAsNotRoot();
 		newRoot.setAsRoot();
+
+	//	System.out.println("hijos de la nueva raiz " + newRoot.getNodeList().get(0).getNode());
+	//	System.out.println("hijos de la nueva raiz " + newRoot.getNodeList().get(1).getNode());
+				
+		mem.saveNode(n);
+		mem.saveNode(n2);
 		
 		root = newRoot;
 		height++;
 	}
 	
-	public void adjustTree(NodeFamily fam){
+	public void adjustTree(NodeFamily fam) throws IOException{
 		Node n = fam.getNode();
 		
 		while(!n.isRoot()){
@@ -266,14 +326,14 @@ public class RSTree {
 			
 			Rectangle r = getBoundingRectangle(n.getNodeList());
 			p.getNodeList().get(i).setRectangle(r);
-			
+
+			mem.saveNode(n);
 			n = p;
-			
 		}		
 	}
 
 	/*Realiza split de un nodo, devolviendo los dos nodos en los que se divide*/
-	public Node[] split(Node n){
+	public Node[] split(Node n) throws IOException{
 		int dim = chooseSplitAxis(n);
 		int k = chooseSplitIndex(n,dim);
 				
@@ -296,7 +356,18 @@ public class RSTree {
 			returnArray[0] = n;
 			n.setNodeList(lN1);
 			returnArray[1] = new LeafNode(lN2,M);
-
+			returnArray[1].setPos(getNewPos());
+			
+			/*System.out.println("dividiendo hoja");
+			System.out.println(n.getNodeList().get(0).getRectangle());
+			if(returnArray[1].getEntryCount()==2){
+				System.out.println(returnArray[1].getNodeList().get(0).getRectangle());
+				System.out.println(returnArray[1].getNodeList().get(1).getRectangle());
+			}*/
+			
+			mem.saveNode(returnArray[0]);
+			mem.saveNode(returnArray[1]);
+			
 			return returnArray;
 
 		} else {
@@ -304,11 +375,21 @@ public class RSTree {
 			returnArray[0] = n;
 			n.setNodeList(lN1);
 			returnArray[1] = new InnerNode(lN2,M);
-
+			returnArray[1].setPos(getNewPos());
+			
+			/*System.out.println("dividiendo interno");
+			System.out.println(n.getNodeList().get(0).getRectangle());
+			System.out.println(returnArray[1].getNodeList().get(0).getRectangle());
+			if(returnArray[1].getEntryCount()==2){
+				System.out.println(returnArray[1].getNodeList().get(1).getRectangle());
+			}*/
+			
+			mem.saveNode(returnArray[0]);
+			mem.saveNode(returnArray[1]);
+			
 			return returnArray;
 		}
 	}
-	
 	
 	public int chooseSplitAxis(Node n){
 		float[] sum = new float[2];
@@ -352,7 +433,6 @@ public class RSTree {
 		return dim;
 	}
 	
-	
 	public int chooseSplitIndex(Node n, int dim){
 		LinkedList<NodeElem> list = n.getNodeList(); 
 		sortByDimMin(list,dim);
@@ -388,10 +468,10 @@ public class RSTree {
 		if(index.size()>1){
 			int index2 = 0;
 			float areaTot = Float.MAX_VALUE;
-			
+	
 			for(int i = 0;i<index.size();i++){
-				List<NodeElem> l1 = list.subList(0, m + index.get(i) -2);
-				List<NodeElem> l2 = list.subList(m + index.get(i) -1, list.size());
+				List<NodeElem> l1 = list.subList(0, m + index.get(i) - 1);
+				List<NodeElem> l2 = list.subList(m + index.get(i) - 1, list.size());
 				
 				Rectangle MBR1 = getBoundingRectangle(l1);
 				Rectangle MBR2 = getBoundingRectangle(l2);
@@ -404,7 +484,7 @@ public class RSTree {
 				}			
 			}
 			
-			return index.get(index2);			
+			return index2;			
 		}
 		
 		return index.get(0);
@@ -472,21 +552,23 @@ public class RSTree {
 		NodeFamily fam = new NodeFamily();
 		fam.setNode(root);
 		
+		System.out.println("a insertar " + e.getRectangle());
+		
 		fam = chooseSubtree(fam,e,level);	 
 		Node n = fam.getNode(); 
 		n.getNodeList().add(e);	
 		
 		if(n.getEntryCount()>M){
 			OverflowRes ovr = overflowTreatment(n,fam,level);
-			
-			/*Si flag es verdadera, entonces hubo split y es necesario propagarlo hacia
-			 arriba*/
+		
 			if(ovr.split()){
 				propagateSplit(fam,ovr);
 			}
 		}
 		
+		n = fam.getNode();
 		Node p;
+		
 		while(!n.isRoot()){		
 			p = fam.getParent();
 			Integer i = fam.getNextIndex();
@@ -494,26 +576,26 @@ public class RSTree {
 			Rectangle r = getBoundingRectangle(n.getNodeList());
 			p.getNodeList().get(i).setRectangle(r);
 			
+			mem.saveNode(n);
 			n = p;			
 		}
 	
 		/*Termine la insercion, por lo tanto debo reiniciar la lista de niveles visitados*/
-		levelsVisited = new LinkedList<Integer>();
+		levelsVisited = new HashSet<Integer>();
 	}
 		
 	public OverflowRes overflowTreatment(Node n, NodeFamily fam, int level) throws IOException{
 		OverflowRes res = new OverflowRes(n);
-				
-		if(!n.isRoot()){
-			if(!levelsVisited.contains(level)){	
-				reinsert(n, fam, level);
-				levelsVisited.add(level);
-			}else{
-				/*Si ya pase por este nivel en la insercion de este rectangulo, entonces hago split del nodo*/
-				Node[] newNodes = split(n);
-				res.setNewNode(newNodes[1]);
-			}
+		
+		boolean inserted = levelsVisited.add(level); 
+		if (inserted && !n.isRoot()) {
+			reinsert(n, fam, level);
+		} else {
+			/*Si ya pase por este nivel en la insercion de este rectangulo, entonces hago split del nodo */
+			Node[] newNodes = split(n);
+			res.setNewNode(newNodes[1]);
 		}
+		
 		return res;
 	}
 	
@@ -522,6 +604,7 @@ public class RSTree {
 		
 		if(!fam.getNode().isRoot()){
 			Node p = fam.getParent();
+			int i = fam.getNextIndex();
 			
 			/*Crear una nueva entrada a insertar en el padre*/
 			NodeElem eLL = new NodeElem();
@@ -532,12 +615,16 @@ public class RSTree {
 			
 			/*Reviso si hay overflow y propago de ser necesario*/
 			if(p.getEntryCount()>M){
+				fam.setNode(p);
 				OverflowRes res = overflowTreatment(p,fam,fam.getTreeHeight());
 				
 				if(res.split()){
 					propagateSplit(fam,res);
 				}	
 			}
+			
+			mem.saveNode(p);
+			mem.saveNode(ll);
 		}else{
 			/*Si recibo un split de la raíz, no puedo seguir propagando hacia arriba, solo me queda
 			 * hacer crecer el arbol*/
@@ -554,15 +641,20 @@ public class RSTree {
 			rootChildren.add(e1);
 			rootChildren.add(e2);
 			
-			Node newRoot = new InnerNode(rootChildren,M);
-			
+			Node newRoot = new InnerNode(getNewPos(),M);
+					
 			/*Los hijos ya no son la raiz*/
 			fam.getNode().setAsNotRoot();
 			ll.setAsNotRoot();
 			newRoot.setAsRoot();
 			
+			mem.saveNode(fam.getNode());
+			mem.saveNode(ll);
 			
 			newRoot.setNodeList(rootChildren);
+			
+			/*Debo asignar a la nueva raiz como el nodo a cambiar*/
+			fam.setNode(newRoot);
 			
 			root = newRoot;
 			height++;		
@@ -613,11 +705,12 @@ public class RSTree {
 	}
 		
 	/*Eliminar una entrada*/
-	public int deleteEntry(NodeElem r, NodeFamily cont){
+	public int deleteEntry(NodeElem r, NodeFamily cont) throws IOException{
 		/*Elimino la entrada del nodo correspondiente*/
 		cont.getNode().removeChild(r);
 		
 		NodeFamily newFamily = cont.getClone();
+		
 		/*Propago los cambios*/
 		condenseTree(newFamily);
 		
@@ -626,7 +719,7 @@ public class RSTree {
 	
 	/*Propaga los cambios por haber eliminado un nodo de abajo hacia arriba, como solo se utiliza
 	 * para reinsert, jamas tendre el caso de underflow*/
-	public void condenseTree(NodeFamily init){
+	public void condenseTree(NodeFamily init) throws IOException{
 		Node n = init.getNode();
 		
 		while(!n.isRoot()){
@@ -635,7 +728,8 @@ public class RSTree {
 						
 			Rectangle r = getBoundingRectangle(n.getNodeList());
 			parent.getNodeList().get(i).setRectangle(r);
-					
+			
+			mem.saveNode(n);
 			n = parent;		
 		}		
 	}
@@ -657,18 +751,19 @@ public class RSTree {
 					returnList.add(rectangleList.get(i).getRectangle());
 				}
 			}
-
 		}else{
 			LinkedList<NodeElem> childList = t.getNodeList();
 			
 			for (int i = 0; i < childList.size(); i++) {
 				Rectangle rect = childList.get(i).getRectangle();
-				
-				if(rect.intersects(r)){
-					Node n = mem.loadNode(t.getChildPos(i));
 					
-					returnList.addAll(search(n,r));
-				}
+				if(!rect.contains(r)){
+					continue;
+				} 
+				
+				Node n = mem.loadNode(t.getChildPos(i));
+				returnList.addAll(search(n,r));
+
 			}
 		}
 		

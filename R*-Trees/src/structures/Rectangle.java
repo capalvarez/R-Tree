@@ -208,14 +208,14 @@ public class Rectangle {
 	}
 	
 	public byte[] getByteForm(byte[] bytes, int pos){
-		ByteBuffer.wrap(bytes, pos, 8).putFloat(this.left());	
-		pos += 8;
-		ByteBuffer.wrap(bytes, pos, 8).putFloat(this.right());	
-		pos += 8;
-		ByteBuffer.wrap(bytes, pos, 8).putFloat(this.bottom());	
-		pos += 8;
-		ByteBuffer.wrap(bytes, pos, 8).putFloat(this.top());	
-		pos += 8;
+		ByteBuffer.wrap(bytes, pos, 4).putFloat(this.left());	
+		pos += 4;
+		ByteBuffer.wrap(bytes, pos, 4).putFloat(this.right());	
+		pos += 4;
+		ByteBuffer.wrap(bytes, pos, 4).putFloat(this.bottom());	
+		pos += 4;
+		ByteBuffer.wrap(bytes, pos, 4).putFloat(this.top());	
+		pos += 4;
 		
 		return bytes;
 	}

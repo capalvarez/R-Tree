@@ -9,8 +9,9 @@ public class NodeFamily {
 	
 	public NodeFamily(){}
 	
-	private NodeFamily(Stack<Node> fam){
+	private NodeFamily(Stack<Node> fam, Stack<Integer> in){
 		family = fam;
+		index = in;
 	}
 	
 	public void setNode(Node n){
@@ -47,7 +48,7 @@ public class NodeFamily {
 	}
 
 	public NodeFamily getClone(){
-		NodeFamily copy = new NodeFamily((Stack<Node>) family.clone());
+		NodeFamily copy = new NodeFamily((Stack<Node>) family.clone(),(Stack<Integer>) index.clone());
 		copy.setNode(node);
 		
 		return copy;
