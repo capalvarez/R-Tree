@@ -22,7 +22,7 @@ public class Main {
 		
 		RectangleGenerator rG = new RectangleGenerator(min,max,minArea,maxArea);
 		
-		for(int i=9;i<21;i=i+3){
+		for(int i=18;i<21;i=i+3){
 			int rNumber = (int) Math.pow(2, i);
 			
 			/*Generar los 2^i rectangulos a insertar*/
@@ -38,7 +38,7 @@ public class Main {
 			
 			/*Construir el arbol utilizando insercion con split*/
 			System.out.println("Iniciando construccion con split");
-			RSTree splitTree = new RSTree(M,m,p,buffSize,nodeSize);
+			RSTree splitTree = new RSTree(M,m,p,buffSize,nodeSize,"treeSplit.obj");
 			long startTimeSplit = System.currentTimeMillis();
 			
 			for(int j=0;j<rectangles.length;j++){
@@ -55,7 +55,7 @@ public class Main {
 			
 			/*Construir el arbol utilizando insercion con reinsert*/
 			System.out.println("Iniciando construccion con reinsert");
-			RSTree reinsertTree = new RSTree(M,m,p,buffSize,nodeSize);
+			RSTree reinsertTree = new RSTree(M,m,p,buffSize,nodeSize,"treeReinsert.obj");
 			long startTimeReinsert = System.currentTimeMillis();
 			
 			for(int j=0;j<rectangles.length;j++){
@@ -107,6 +107,8 @@ public class Main {
 			System.out.println("Busqueda realizada en:  " + (endTimeSearchReinsert - startTimeSearchReinsert) + " milis");
 			System.out.println("Cantidad de accesos a disco: " + reinsertTree.getMemoryAccess());
 	
+			System.out.println("");
+		
 		}
 		
 	}

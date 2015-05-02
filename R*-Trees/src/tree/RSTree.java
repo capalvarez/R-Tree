@@ -29,7 +29,7 @@ public class RSTree {
 	private Set<Integer> levelsVisited = new HashSet<Integer>();
 		
 	/*Inicializa un nuevo R*-Tree*/	
-	public RSTree(int M, int m, int p, int buffSize, int nodeSize) throws IOException{
+	public RSTree(int M, int m, int p, int buffSize, int nodeSize, String fileName) throws IOException{
 		this.M = M;
 		this.m = m;
 		this.p = p; 
@@ -38,7 +38,7 @@ public class RSTree {
 		root = new LeafNode(M);
 		root.setAsRoot();
 	
-		mem = new MemoryMng(buffSize,nodeSize,M);
+		mem = new MemoryMng(buffSize,nodeSize,M,fileName);
 	}
 	
 	public int getHeight(){
@@ -91,12 +91,6 @@ public class RSTree {
 	}
 
 	public NodeFamily chooseSubtree(NodeFamily family, NodeElem e) throws IOException{	
-		/*if(root.getEntryCount()==2){
-			System.out.println("Raiz tiene");
-			System.out.println(root.getNodeList().get(0).getRectangle());
-			System.out.println(root.getNodeList().get(1).getRectangle());
-		}*/
-		//System.out.println("altura del arbol " + getHeight());
 		return chooseSubtree(family,e,getHeight());
 	}
 	
@@ -108,9 +102,16 @@ public class RSTree {
 		LinkedList<NodeElem> childList = family.getNode().getNodeList();
 		Node firstChild = mem.loadNode(family.getNode().getChildPos(0));
 		
+		if(childList.size()==0){
+			System.out.println("ouch");
+		}
+		
 		/*Los hijos son hojas, basta verificar que el primero lo sea*/
 		if(firstChild.isLeaf()){
 			Integer[] indexOverlap = getMinOverlap(childList,e.getRectangle());
+			if(indexOverlap.length==0){
+				System.out.println("ouchis");
+			}
 			
 			/*Si existe mas de un indice con el overlap minimo, entonces hay empate*/
 			if(indexOverlap.length>1){	
@@ -163,49 +164,82 @@ public class RSTree {
 		float overlap = Float.MAX_VALUE;
 		
 		ArrayList<Integer> index = new ArrayList<Integer>();
+		int loneIndex = 0;
+		int k = 0;	
+		int j = 0;
 		
 		for(int i = 0;  i < children.size(); i++){
 			Rectangle child = children.get(i).getRectangle();
 			float newOverlap = child.overlapEnlargement(r,children);
 			
 			if(newOverlap<overlap){
-				index = new ArrayList<Integer>();
-				index.add(i);
-				overlap = newOverlap;		
+				loneIndex = i;
+				overlap = newOverlap;
+				j++;
 			}else{
 				if(newOverlap==overlap){
 					index.add(i);
 				}
-			}	
+			}
+			k++;
 		}
 		
-		Integer[] iArray = new Integer[index.size()];
-		iArray = index.toArray(iArray);
-		
+		Integer[] iArray;
+		if(index.size()>0){
+			iArray = new Integer[index.size()];
+			iArray = index.toArray(iArray);
+		}else{
+			iArray = new Integer[1];
+			iArray[0] = loneIndex;
+		}		
+			
 		return iArray;	
 	}
 	
 	public Integer[] getMinAreaEnlarg(Integer[] indexList, LinkedList<NodeElem> children, Rectangle r){
 		float area = Float.MAX_VALUE;
 		ArrayList<Integer> index = new ArrayList<Integer>();
+		int loneIndex = 0;
+		int k=0;
+		int j= 0;
 		
 		for(int i = 0;  i < indexList.length; i++){
 			Rectangle child = children.get(indexList[i]).getRectangle();
 						
 			float newArea = child.areaEnlargement(r); 
 			if(newArea<area){
-				index = new ArrayList<Integer>();
-				index.add(i);
+				loneIndex = i;
 				area = newArea;		
+				j++;
 			}else{
 				if(newArea==area){
 					index.add(i);
 				}
-			}	
+			}
+			k++;
 		}
 		
-		Integer[] iArray = new Integer[index.size()];
-		iArray = index.toArray(iArray);
+	/*	if(index.size()==0){
+			System.out.println("indice cero en el area");
+			System.out.println("pase por adentro del for " + k);
+			System.out.println("pase por adentro del if importante " + k);
+		}*/
+		
+		Integer[] iArray;
+		if(index.size()>0){
+			iArray = new Integer[index.size()];
+			iArray = index.toArray(iArray);
+		}else{
+			iArray = new Integer[1];
+			iArray[0] = loneIndex;
+		}
+		
+		/*if(index.size()==0){
+			System.out.println("traduccion a arreglo");
+			System.out.println("indice cero en el area");
+			System.out.println("pase por adentro del for " + k);
+			System.out.println("pase por adentro del if importante " + k);
+		}*/
 		
 		return iArray;	
 	}
@@ -390,6 +424,7 @@ public class RSTree {
 			
 		float inter = Float.MAX_VALUE;
 		ArrayList<Integer> index = new ArrayList<Integer>();
+		index.add(0);
 		
 		for(int k = 1;k<=(M-2*m+2); k++){
 			List<NodeElem> l1 = list.subList(0, m + k -1);

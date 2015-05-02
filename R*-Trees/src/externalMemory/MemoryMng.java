@@ -23,8 +23,8 @@ public class MemoryMng {
 	
 	private int memoryAccess;
 	
-	public MemoryMng(int buffSize, int nodeSize, int M) throws IOException{
-		file = new RandomAccessFile("tree.obj", "rw");
+	public MemoryMng(int buffSize, int nodeSize, int M, String fileName) throws IOException{
+		file = new RandomAccessFile(fileName, "rw");
 		file.setLength(0);
 		
 		priority = new PriorityBuffer(buffSize);

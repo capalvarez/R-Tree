@@ -8,6 +8,8 @@ import java.util.LinkedList;
 
 import javax.swing.JFrame;
 
+import dataGenerator.RectangleGenerator;
+
 import externalMemory.MemoryMng;
 
 import structures.*;
@@ -33,28 +35,15 @@ public class RectWindow extends JFrame{
 	}
 	
 	public static void main(String[] args) throws IOException{
-		Rectangle r1 = new Rectangle(0,100,0,100);
-		Rectangle r2 = new Rectangle(50,150,50,150);
-		Rectangle r3 = new Rectangle(50,75,50,75);
-		Rectangle r4 = new Rectangle(200,300,200,300);
-		Rectangle r5 = new Rectangle(100,200,100,200);
-		Rectangle r6 = new Rectangle(100,120,100,120);
-		Rectangle r7 = new Rectangle(120,180,160,250);
-		Rectangle r8 = new Rectangle(10,190,100,230);
-		Rectangle r9 = new Rectangle(150,250,150,250);
-		Rectangle r10 = new Rectangle(160,180,170,250);
-		Rectangle r11 = new Rectangle(10,100,100,110);
-		Rectangle r12 = new Rectangle(100,250,120,260);
-		Rectangle r13 = new Rectangle(0,200,0,200);
-		Rectangle r14 = new Rectangle(230,250,300,280);
-		Rectangle r15 = new Rectangle(0,20,10,80);
-		Rectangle r16 = new Rectangle(10,120,50,180);
-		Rectangle r17 = new Rectangle(10,250,100,250);
+		RectangleGenerator rG = new RectangleGenerator(0,300,0,100); 
+		Rectangle[] rectangles =  rG.getRectangleArray(20);
 		
-		//Rectangle[] rectangles =  {r1,r2,r3,r4,r5,r6,r7,r8,r9,r10,r11,r12,r13,r14,r15,r16,r17};
+		RSTree tree = new RSTree(10,4,3,5,68,"tree.obj");
+		for(int i=0;i<rectangles.length;i++){
+			tree.insertReinsertRectangle(rectangles[i]);
+		}
 		
-		RSTree tree = new RSTree(2,1,1,5,68);
-		tree.insertReinsertRectangle(r1);
+		/*tree.insertReinsertRectangle(r1);
 		tree.insertReinsertRectangle(r2);
 		tree.insertReinsertRectangle(r3);
 		tree.insertReinsertRectangle(r4);
@@ -70,7 +59,7 @@ public class RectWindow extends JFrame{
 		tree.insertReinsertRectangle(r14);
 		tree.insertReinsertRectangle(r15);
 		tree.insertReinsertRectangle(r16);
-		tree.insertReinsertRectangle(r17);
+		tree.insertReinsertRectangle(r17);*/
 		
 		
 				
@@ -80,9 +69,9 @@ public class RectWindow extends JFrame{
 		
 		//System.out.println(tree.findRectangle(r2).length);
 
-		MemoryMng mem = tree.mem;
+		/*MemoryMng mem = tree.mem;
 		Node n1 = mem.loadNode(tree.root.getNodeList().get(0).getNode());
-		Node n2 = mem.loadNode(n1.getNodeList().get(0).getNode());
+		Node n2 = mem.loadNode(n1.getNodeList().get(0).getNode());*/
 		/*Node n3 = mem.loadNode(n2.getNodeList().get(1).getNode());
 		Node n4 = mem.loadNode(n3.getNodeList().get(1).getNode());
 		Node n5 = mem.loadNode(n4.getNodeList().get(1).getNode());*/
