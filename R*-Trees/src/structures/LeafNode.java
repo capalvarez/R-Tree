@@ -71,12 +71,10 @@ public class LeafNode implements Node {
 		ByteBuffer.wrap(bytes, pos, 8).putLong(archivePos);
 		pos += 8;
 		
-		//System.out.println("guardando el nodo hoja " + infoList.get(0).getRectangle() + " con " + getEntryCount() + " hijos");
 		ByteBuffer.wrap(bytes, pos, 4).putInt(getEntryCount());
 		pos += 4;
 		
 		for (int i = 0; i < getEntryCount(); i++) {
-			//System.out.println(pos);
 			infoList.get(i).getRectangle().getByteForm(bytes,pos);
 			pos += 16 ;
 		}

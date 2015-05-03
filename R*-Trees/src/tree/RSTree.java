@@ -58,7 +58,7 @@ public class RSTree {
 	public void resetMemoryAccess(){
 		mem.resetMemoryAccess();
 	}
-	
+	 
 	public Integer[] loop(int n) {
 	    Integer[] a = new Integer[n];
 	    
@@ -218,13 +218,7 @@ public class RSTree {
 			}
 			k++;
 		}
-		
-	/*	if(index.size()==0){
-			System.out.println("indice cero en el area");
-			System.out.println("pase por adentro del for " + k);
-			System.out.println("pase por adentro del if importante " + k);
-		}*/
-		
+			
 		Integer[] iArray;
 		if(index.size()>0){
 			iArray = new Integer[index.size()];
@@ -233,13 +227,6 @@ public class RSTree {
 			iArray = new Integer[1];
 			iArray[0] = loneIndex;
 		}
-		
-		/*if(index.size()==0){
-			System.out.println("traduccion a arreglo");
-			System.out.println("indice cero en el area");
-			System.out.println("pase por adentro del for " + k);
-			System.out.println("pase por adentro del if importante " + k);
-		}*/
 		
 		return iArray;	
 	}
@@ -598,7 +585,6 @@ public class RSTree {
 				OverflowRes res = overflowTreatment(p,fam,fam.getTreeHeight());
 				
 				if(res.split()){
-					//System.out.println("a propagar el split en propagateSplit");
 					NodeFamily copy = fam.getClone();
 					
 					propagateSplit(copy,res);
@@ -736,7 +722,7 @@ public class RSTree {
 			for (int i = 0; i < childList.size(); i++) {
 				Rectangle rect = childList.get(i).getRectangle();
 					
-				if(!rect.contains(r)){
+				if(!rect.intersects(r)){
 					continue;
 				} 
 				
