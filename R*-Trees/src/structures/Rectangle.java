@@ -5,8 +5,6 @@ import java.awt.geom.Rectangle2D;
 import java.nio.ByteBuffer;
 import java.util.LinkedList;
 
-import display.RectWindow;
-
 public class Rectangle {
 	private float minX;
 	private float maxX;

@@ -56,7 +56,6 @@ public class LeafNode implements Node {
 	}
 
 	public byte[] getByteForm(){
-		/*cambiar el largo a futuro, hay que calcularlo*/
 		byte[] bytes = new byte[20+24*max];
 		
 		int pos = 0;

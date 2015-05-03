@@ -128,7 +128,6 @@ public class MemoryMng {
 		int entryCount = ByteBuffer.wrap(nodeInfo, pos, 4).getInt();
 		pos += 4;
 		
-		//System.out.println("estoy creando un nodo con " + entryCount + " hijos  que es hoja? " + isLeaf);
 		Rectangle[] rectangles = new Rectangle[entryCount];
 				
 		for (int i = 0; i < entryCount; i++) {

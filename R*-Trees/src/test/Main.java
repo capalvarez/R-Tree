@@ -22,7 +22,7 @@ public class Main {
 		
 		RectangleGenerator rG = new RectangleGenerator(min,max,minArea,maxArea);
 		
-		for(int i=21;i<24;i=i+3){
+		for(int i=9;i<24;i=i+3){
 			int rNumber = (int) Math.pow(2, i);
 			
 			/*Generar los 2^i rectangulos a insertar*/
